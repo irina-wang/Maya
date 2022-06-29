@@ -51,8 +51,17 @@ class MyCommandClass( OpenMayaMPx.MPxCommand ):
         ''' Command execution. '''        
         pass
 
-    '''
-    cmdCreator
-        a maya_useNewAPI() function must be defined to indicate what type objects 
-    are being passed.
-    '''
+
+'''
+The Directed Acyclic Graph (DAG)
+
+Transform Nodes (MFn.kTransform):
+    This node type defines a local 4x4 transformation matrix which affects 
+    all the objects beneath it in the hierarchy. This transformation data 
+    is manipulated by the MFnTransform function set. Transform nodes can have 
+    other transform nodes as their children to group scene elements together.
+Shape Nodes (MFn.kMesh, MFn.kCamera, MFn.kLight, ... ): 
+    This node type contains the actual geometric information of a scene element,
+    such as the vertices of a mesh. A shape node always has a transform node as
+    its parent.
+'''
