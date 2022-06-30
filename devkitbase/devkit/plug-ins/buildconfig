@@ -1,0 +1,94 @@
+#-
+# ==========================================================================
+# Copyright 2021 Autodesk, Inc. All rights reserved.
+#
+# Use of this software is subject to the terms of the Autodesk
+# license agreement provided at the time of installation or download,
+# or which otherwise accompanies this software in either electronic
+# or hard copy form.
+# ==========================================================================
+#+
+
+mayaVersion := 2023
+
+#DEVKIT_LOCATION = /your/path/to/maya/devkitBase 
+export DEVKIT_LOCATION
+
+# Make sure these are in your path.
+CC          = clang
+CXX         = clang++
+LD          = clang++
+
+# By default, we will try to build a universal binary to match the same
+# architectures as the installed Maya binary. If you only want one specific
+# architecture (e.g i386 or x86_64) then set it below.
+PREFERRED_ARCHITECTURE	=
+
+
+#-------------------------------------------------------------
+#
+#       Try to find the devkit
+#
+#-------------------------------------------------------------
+# Actually devkitBase location
+ifeq ($(DEVKIT_LOCATION), )
+    DEVKIT_LOCATION =  $(strip $(realpath $(CURDIR)/../..))
+endif
+
+ifneq ($(wildcard $(DEVKIT_LOCATION)/include/maya/MTypes.h),)
+    #devkitBase/devkit
+    DEVKIT = $(DEVKIT_LOCATION)/devkit
+    DEVKIT_INCLUDE = $(DEVKIT_LOCATION)/include
+    DEVKIT_LIB=$(DEVKIT_LOCATION)/lib
+    DEVKIT_BIN=$(DEVKIT)/bin
+else
+    $(error The DEVKIT_LOCATION environment variable does not point to the devkitBase location)
+endif
+
+
+DEVKIT_ALEMBIC_INCDIR = $(DEVKIT)/Alembic/include
+DEVKIT_ALEMBIC_LIBDIR = $(DEVKIT)/Alembic/lib
+
+# Determine the architectures to build.
+ARCH_FLAGS = -arch x86_64
+
+# Settings
+CFLAGS        = -DCC_GNU_ -O3 $(ARCH_FLAGS)  -D_LANGUAGE_C_PLUS_PLUS\
+                -mmacosx-version-min=10.14
+C++FLAGS      = $(CFLAGS) -std=c++17 -stdlib=libc++ $(WARNFLAGS) $(ERROR_FLAGS) -fno-gnu-keywords -fpascal-strings
+INCLUDES      = -I$(SRCDIR) -I"$(DEVKIT_INCLUDE)"
+DYNLIB_LOCATION = $(DEVKIT_LIB)
+
+LFLAGS  = -std=c++14 -stdlib=libc++ -fno-gnu-keywords -fpascal-strings  \
+          -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk \
+          $(ARCH_FLAGS) -headerpad_max_install_names \
+          -framework System -framework SystemConfiguration \
+          -framework CoreServices -framework Carbon \
+          -framework Cocoa -framework ApplicationServices \
+          -framework IOKit \
+          -dynamiclib
+
+LFLAGS += -L"$(DYNLIB_LOCATION)"
+LIBS    =  
+
+EXT     = dylib
+
+# Makedepend flags
+#
+# Ignore dependencies on system header files.
+MDFLAGS = -Y
+
+# Find out if the Qt development tools are installed.
+# we want to use the  qmake file provided by Maya, not the system
+ifneq ($(wildcard $(DEVKIT_BIN)/qmake),)
+        QMAKE = $(DEVKIT_BIN)/qmake
+else
+        $(error The DEVKIT_LOCATION environment variable does not point towards the \
+                directory where Maya's qmake is located)
+endif
+
+
+ifneq ($(QMAKE),)
+  # We want to generate a Makefile, not an xcode project.
+  QMAKE += -spec $(DEVKIT_LOCATION)/mkspecs/macx-clang
+endif

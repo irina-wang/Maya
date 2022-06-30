@@ -1,0 +1,5 @@
+if (NOT PYTHON_CONFIG_SUFFIX)
+    message(STATUS "PySide2Config: Using default python: .cpython-39-darwin")
+    SET(PYTHON_CONFIG_SUFFIX .cpython-39-darwin)
+endif()
+include(${CMAKE_CURRENT_LIST_DIR}/PySide2Config${PYTHON_CONFIG_SUFFIX}.cmake)
