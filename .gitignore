@@ -2,8 +2,4 @@
 .DS_store
 
 # Ignore files in library
-<<<<<<< HEAD
 devkitBase/lib
-=======
-devkit/lib
->>>>>>> b96a7c60735701519a3dc4b280477e0e34bc9366
