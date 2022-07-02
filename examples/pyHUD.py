@@ -1,8 +1,12 @@
 import maya.cmds as cmds
 
-#
-#Define a procedure that returns a value to be used by the Heads Up Display
-#
+
+'''
+https://download.autodesk.com/us/maya/2009help/CommandsPython/headsUpDisplay.html#hExamples
+Define a procedure that returns a value to be used by the Heads Up Display
+
+'''
+
 def objectPosition(*args):
 	try:
 		selectedNodes = cmds.selectedNodes()
