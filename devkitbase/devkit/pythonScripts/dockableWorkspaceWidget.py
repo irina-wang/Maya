@@ -14,7 +14,7 @@ customMixinWindow = None
 
 ''' MayaQWidgetDockableMixin is not a workspace control in itself, it is added 
     as a child to a created workspace control. See help(MayaQWidgetDockableMixin) 
-    for more details. The following class is a simple widget with a layout and  a push button.
+    for more details. The following class is a simple widget with a layout and a push button.
 ''' 
 class DockableWidget(MayaQWidgetDockableMixin, QWidget):
   def __init__(self, parent=None):
