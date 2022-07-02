@@ -18,20 +18,21 @@ from shiboken2 import wrapInstance
 import os.path
 
 
+currentDir = "/Users/mac/Documents/Maya-Plug-ins/devkitBase/devkit/pythonScripts/createNode.ui"
+
 mayaMainWindowPtr = omui.MQtUtil.mainWindow() 
 mayaMainWindow = wrapInstance(int(mayaMainWindowPtr), QWidget) 
 
 class CreateNodeUI(QWidget):
     def __init__(self, *args, **kwargs):
-        super(CreateNodeUI,self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.setParent(mayaMainWindow)
-        self.setWindowFlags( Qt.Window )
+        self.setWindowFlags(Qt.Window)
         self.initUI()
         
     def initUI(self):
         loader = QUiLoader()
-        currentDir = os.path.dirname(__file__)
-        file = QFile(currentDir+"/createNode.ui")
+        file = QFile(currentDir)
         file.open(QFile.ReadOnly)
         self.ui = loader.load(file, parentWidget=self)
         file.close()

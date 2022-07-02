@@ -62,6 +62,8 @@ def main():
     w1 = widgetClass()
     w1.show()
 
+    
+
     # Show the override widget with same getDefaultWidget()
     setDefaultWidget(MyDerivedPushButton)
     widgetClass = getDefaultWidget() 
