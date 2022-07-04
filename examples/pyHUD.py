@@ -1,12 +1,10 @@
+
+
 import maya.cmds as cmds
 
-
-'''
-https://download.autodesk.com/us/maya/2009help/CommandsPython/headsUpDisplay.html#hExamples
-Define a procedure that returns a value to be used by the Heads Up Display
-
-'''
-
+#
+#Define a procedure that returns a value to be used by the Heads Up Display
+#
 def objectPosition(*args):
 	try:
 		selectedNodes = cmds.selectedNodes()
@@ -15,6 +13,7 @@ def objectPosition(*args):
 		return positionList[0]
 	except:
 		return (0.0,0.0,0.0)
+
 #
 #Now, create a HUD object to display the return value of the above procedure
 #
@@ -29,6 +28,7 @@ def objectPosition(*args):
 #          to allow the update of the data on attribute changes.
 #
 cmds.headsUpDisplay( 'HUDObjectPosition', section=1, block=0, blockSize='medium', label='Position', labelFontSize='large', command=objectPosition, event='SelectionChanged', nodeChanges='attributeChange' )
+
 #
 #Create a preset HUD object to display the camera names.
 #
@@ -41,10 +41,12 @@ cmds.headsUpDisplay( 'HUDObjectPosition', section=1, block=0, blockSize='medium'
 #      automatically insert the associated data into the data field.
 #
 cmds.headsUpDisplay( 'HUDCameraName', s=2, b=0, ba='center', dw=50, pre='cameraNames')
+
 #
 #Now, remove these two HUDs. Both can be removed in three ways: name, ID or position.
 #The following examples will demonstrate removal by name and position
 #
 cmds.headsUpDisplay( 'HUDObjectPosition', rem=True )
+
 cmds.headsUpDisplay( rp=(7, 0) )
 	
