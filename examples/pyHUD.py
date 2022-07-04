@@ -1,9 +1,25 @@
-
-
 import maya.cmds as cmds
 
+from builtins import object
+from maya import cmds
+from maya import mel
+from maya import OpenMaya as om
+from maya import OpenMayaUI as omui 
+
+from PySide2.QtCore import * 
+from PySide2.QtGui import * 
+from PySide2.QtWidgets import *
+from PySide2.QtUiTools import *
+from shiboken2 import wrapInstance 
+
+
+from maya.app.general.mayaMixin import MayaQWidgetBaseMixin, MayaQWidgetDockableMixin
+import functools
+
+# placed in a 2D inactive overlay plane on the 3D viewport
+
 #
-#Define a procedure that returns a value to be used by the Heads Up Display
+# Define a procedure that returns a value to be used by the Heads Up Display
 #
 def objectPosition(*args):
 	try:
@@ -15,9 +31,9 @@ def objectPosition(*args):
 		return (0.0,0.0,0.0)
 
 #
-#Now, create a HUD object to display the return value of the above procedure
+# Now, create a HUD object to display the return value of the above procedure
 #
-#Attributes:
+# Attributes:
 #
 #        - Section 1, block 0, represents the top second slot of the view.
 #        - Set the blockSize to "medium", instead of the default "small"
