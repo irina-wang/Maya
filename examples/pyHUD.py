@@ -61,7 +61,9 @@ cmds.headsUpDisplay( 'HUDObjectPosition', section=1, block=0, blockSize='medium'
 #    - Finally setting the preset to "cameraNames", selects a preset which will
 #      automatically insert the associated data into the data field.
 #
-cmds.headsUpDisplay( 'HUDCameraName', s=5, b=0, blockSize='medium', label='CameraName', labelFontSize='large', ba='center', dw=50, event='SelectionChanged', nodeChanges='attributeChange' ,pre='cameraNames')
+
+# display camera perspectives
+cmds.headsUpDisplay( 'HUDCameraName', s=5, b=0, blockSize='medium', label='CameraName', labelFontSize='large', ba='center', dw=50 ,pre='cameraNames')
 
 #
 #Now, remove these two HUDs. Both can be removed in three ways: name, ID or position.
