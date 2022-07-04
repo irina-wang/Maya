@@ -12,9 +12,14 @@ from PySide2.QtWidgets import *
 from PySide2.QtUiTools import *
 from shiboken2 import wrapInstance 
 
-
 from maya.app.general.mayaMixin import MayaQWidgetBaseMixin, MayaQWidgetDockableMixin
 import functools
+
+
+# for debug
+import pdb
+pdb.set_trace()
+
 
 # placed in a 2D inactive overlay plane on the 3D viewport
 
