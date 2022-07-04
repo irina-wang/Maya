@@ -29,13 +29,12 @@ from PySide2.QtWidgets import *
 from PySide2.QtUiTools import *
 from shiboken2 import wrapInstance 
 
-
 from maya.app.general.mayaMixin import MayaQWidgetBaseMixin, MayaQWidgetDockableMixin
 import functools
 
 
 class MCallbackIdWrapper(object):
-    '''Wrapper class to handle cleaning up of MCallbackIds from registered MMessage
+    ''' Wrapper class to handle cleaning up of MCallbackIds from registered MMessage
     '''
     def __init__(self, callbackId):
         super(MCallbackIdWrapper, self).__init__()
@@ -49,7 +48,7 @@ class MCallbackIdWrapper(object):
 
 
 def getDependNode(nodeName):
-    """Get an MObject (depend node) for the associated node name
+    """ Get an MObject (depend node) for the associated node name
 
     :Parameters:
         nodeName
@@ -82,7 +81,7 @@ class Example_connectAttr(MayaQWidgetDockableMixin, QScrollArea):
 
 
     def attachToNode(self, nodeName):
-        '''Connect UI to the specified node
+        ''' Connect UI to the specified node
         '''
         self.nodeName = nodeName
         self.attrs = None
@@ -142,7 +141,7 @@ class Example_connectAttr(MayaQWidgetDockableMixin, QScrollArea):
 
 
     def onSetAttr(self, widget, attrName, *args, **kwargs):
-        '''Handle setting the attribute when the UI widget edits the value for it.
+        ''' Handle setting the attribute when the UI widget edits the value for it.
         If it fails to set the value, then restore the original value to the UI widget
         '''
         print("onSetAttr", attrName, widget, args, kwargs)
@@ -159,7 +158,7 @@ class Example_connectAttr(MayaQWidgetDockableMixin, QScrollArea):
 
 
     def onDirtyPlug(self, node, plug, *args, **kwargs):
-        '''Add to the self._deferredUpdateRequest member variable that is then 
+        ''' Add to the self._deferredUpdateRequest member variable that is then 
         deferred processed by self._processDeferredUpdateRequest(). 
         '''
         # get long name of the attr, to use as the dict key
@@ -189,8 +188,11 @@ class Example_connectAttr(MayaQWidgetDockableMixin, QScrollArea):
         self._deferredUpdateRequest.clear()
 
 
+
+
+
 def main():
-    obj = cmds.polyCube()[0]
+    obj = cmds.camera()[0]
     ui = Example_connectAttr(node=obj)
     ui.show(dockable=True, floating=True)
     return ui
