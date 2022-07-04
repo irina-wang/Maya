@@ -37,24 +37,24 @@ mayaMainWindow = wrapInstance(int(mayaMainWindowPtr), QWidget)
 class DockableWidget(MayaQWidgetDockableMixin, QWidget):
     # def __init__(self, parent=None):
     #     super(DockableWidget, self).__init__(parent=parent)
-        # add push buttons 
-        # self.button1 = QPushButton()
-        # self.button1.setText('Camera')
-        # self.button2 = QPushButton()
-        # self.button2.setText('Camera2')
         
-        # layout = QVBoxLayout()
-        # layout.addWidget(self.button1)
-        # layout.addWidget(self.button2)
-        # self.setLayout(layout)
-        
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.setParent(mayaMainWindow)
         self.setWindowFlags(Qt.Window)
         self.initUI()
         self.setWindowTitle('Custom Maya Mixin Workspace Control')
+
+        # add push buttons 
+        self.button1 = QPushButton()
+        self.button2 = QCheckBox()
+
+        if self.button2.isChecked()
+        self.button1.setText('myCamera')
+      
+        layout = QVBoxLayout()
+        layout.addWidget(self.button1)
+        self.setLayout(layout)
         
     def initUI(self):
         loader = QUiLoader()
@@ -69,7 +69,14 @@ class DockableWidget(MayaQWidgetDockableMixin, QWidget):
         
         self.ui.okButton.clicked.connect( self.doOK )
         self.ui.cancelButton.clicked.connect( self.doCancel )
-        
+    
+    def myCamera(self):
+        nName = self.ui.nameLineEdit.text()
+        nType = self.ui.typeComboBox.currentText()
+        if len(nName) > 0:
+            cmds.createNode( nType, n=nName )
+        else:
+            cmds.createNode( nType )
         
     def doOK(self):
         nName = self.ui.nameLineEdit.text()
@@ -84,7 +91,6 @@ class DockableWidget(MayaQWidgetDockableMixin, QWidget):
         self.close()
 
    
-
 ''' A workspace control is created by calling show() on the DockableWidget class. 
     This control is only created once if the retain property is set to true, which 
     is the default. The uiScript argument passed to the show() method will be 
@@ -98,12 +104,7 @@ class DockableWidget(MayaQWidgetDockableMixin, QWidget):
     If the control is being restored, then Maya will call the method by passing restore=True
 '''    
 def DockableWidgetUIScript(restore=False):
-      
-  
-
     global customMixinWindow
-  
-
 # ''' When the control is restoring, the workspace control has already been created and
 #       all that needs to be done is restoring its UI.
 # '''
