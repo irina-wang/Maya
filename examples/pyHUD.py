@@ -17,8 +17,8 @@ import functools
 
 
 # for debug
-import pdb
-pdb.set_trace()
+# import pdb
+# pdb.set_trace()
 
 
 # placed in a 2D inactive overlay plane on the 3D viewport
@@ -48,7 +48,8 @@ def objectPosition(*args):
 #        - Attached the attributeChange node change to the SelectionChanged trigger
 #          to allow the update of the data on attribute changes.
 #
-cmds.headsUpDisplay( 'HUDObjectPosition', section=1, block=0, blockSize='medium', label='Position', labelFontSize='large', command=objectPosition, event='SelectionChanged', nodeChanges='attributeChange' )
+a, b = cmds.headsUpDisplay( 'HUDObjectPosition', section=1, block=0, blockSize='medium', label='Position', labelFontSize='large', command=objectPosition, event='SelectionChanged', nodeChanges='attributeChange' )
+print(a, b)
 
 #
 #Create a preset HUD object to display the camera names.
@@ -63,7 +64,7 @@ cmds.headsUpDisplay( 'HUDObjectPosition', section=1, block=0, blockSize='medium'
 #
 
 # display camera perspectives
-cmds.headsUpDisplay( 'HUDCameraName', s=5, b=0, blockSize='medium', label='CameraName', labelFontSize='large', ba='center', dw=50 ,pre='cameraNames')
+cmds.headsUpDisplay('HUDCameraName', s=1, b=0, blockSize='medium', label='CameraName', labelFontSize='large', ba='center', dw=50 ,pre='cameraNames')
 
 #
 #Now, remove these two HUDs. Both can be removed in three ways: name, ID or position.
@@ -71,5 +72,5 @@ cmds.headsUpDisplay( 'HUDCameraName', s=5, b=0, blockSize='medium', label='Camer
 #
 cmds.headsUpDisplay( 'HUDObjectPosition', rem=True )
 
-cmds.headsUpDisplay( rp=(7, 0) )
+# cmds.headsUpDisplay( rp=(7, 0) )
 	
