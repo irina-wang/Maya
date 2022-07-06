@@ -115,33 +115,36 @@ import maya.cmds as cmds
 # each time it is run. The number is incremented at the end of each call.
 #
 gHelloCount = 0
-
-
 HUDID = 0
 
 def HUDButtonReleased(*args):
-	global HUDID
+	global HUDID, startTime
+	if cmds.headsUpDisplay('HUDTime',section=1, b=6):
+		cmds.headsUpDisplay('HUDTime', rem=True)
+		HUDID = 0
 	if not HUDID:
 		print('start recording')
-		HUDID = cmds.headsUpDisplay('HUDTime', section=1, b=6, ba='left' , blockSize='medium', label='Time', labelFontSize='large', command=getTime)
+		# code that is being timed
+		startTime = getStartTime()
+		HUDID = cmds.headsUpDisplay('HUDTime', section=1, b=6, ba='left' , blockSize='medium', label='Start Recording', labelFontSize='large')
 	else:
 		print('end recording')
-		cmds.headsUpDisplay('HUDTime', rem=True )
-		HUDID = 0
+		totalTime = getEndTime(startTime)
+		print('Total time: ', totalTime)
+		HUDID = cmds.headsUpDisplay('HUDTime', section=1, b=6, ba='left' , blockSize='medium', label='Total Time: ', labelFontSize='large', command=getEndTime)
 
-	# lh
-	# time = xxxx
-	# if time is visiblename:
-    # 	print('end recording')
-	# cmds.headsUpDisplay('HUDTime', sg=True, section=1, b=6, ba='left' , blockSize='medium', label='Time', labelFontSize='large', command=getTime)
+global startT
 
-def getTime():
-    print('1:000000000')
+def getStartTime():
+	startT = cmds.timerX()
+	return startT
 
+def getEndTime(startT):
+	endT = cmds.timerX(st=startT)
+	return endT
 
-cmds.hudButton('HUDHelloButton', s=1, b=5, vis=1, l='Record', bw=60, bsh='roundRectangle',  rc=HUDButtonReleased )
-	
-
+cmds.hudButton('HUDRecord', s=1, b=5, vis=1, l='Record', bw=60, bsh='roundRectangle', rc=getStartTime, event= 'timeChanged')
+cmds.hudButton('HUDStop', s=1, b=5, vis=1, l='Record', bw=60, bsh='roundRectangle',  rc=getEndTime(startT), event= 'timeChanged')
 
 
 # def HUDButtonPressed():
