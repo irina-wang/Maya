@@ -35,18 +35,33 @@ def objectPosition(*args):
 	except:
 		return (0.0,0.0,0.0)
 
+
+def cameraName(*args):
+	try:
+		selectedNodes = cmds.selectedNodes()
+		mainObj = selectedNodes[-1]
+		print(mainObj[1:])
+	except:
+		print('Error: No object selected. ')
+
+
+# cameraName()
+
+cmds.headsUpDisplay('HUDName', section=1, block=0, blockSize='medium', label='Cam', labelFontSize='large', command=objectPosition, event='SelectionChanged', nodeChanges='attributeChange' )
+
+
 #
 # Now, create a HUD object to display the return value of the above procedure
 #
 # Attributes:
 #
-#        - Section 1, block 0, represents the top second slot of the view.
-#        - Set the blockSize to "medium", instead of the default "small"
-#        - Assigned the HUD the label: "Position"
-#        - Defined the label font size to be large
-#        - Assigned the HUD a command to run on a SelectionChanged trigger
-#        - Attached the attributeChange node change to the SelectionChanged trigger
-#          to allow the update of the data on attribute changes.
+#		- Section 1, block 0, represents the top second slot of the view.
+#		- Set the blockSize to "medium", instead of the default "small"
+#		- Assigned the HUD the label: "Position"
+#		- Defined the label font size to be large
+#		- Assigned the HUD a command to run on a SelectionChanged trigger
+#		- Attached the attributeChange node change to the SelectionChanged trigger
+#		  to allow the update of the data on attribute changes.
 #
 a, b = cmds.headsUpDisplay( 'HUDObjectPosition', section=1, block=0, blockSize='medium', label='Position', labelFontSize='large', command=objectPosition, event='SelectionChanged', nodeChanges='attributeChange' )
 print(a, b)
@@ -56,11 +71,11 @@ print(a, b)
 #
 #Attributes:
 #
-#    - Section 2, block 0, represents the top middle slot of the view.
-#    - Using blockalign, the HUD object is centered in the middle of the block
-#    - Setting a dw of 50, allocates a space of 50 pixels for the data to reside in.
-#    - Finally setting the preset to "cameraNames", selects a preset which will
-#      automatically insert the associated data into the data field.
+#	- Section 2, block 0, represents the top middle slot of the view.
+#	- Using blockalign, the HUD object is centered in the middle of the block
+#	- Setting a dw of 50, allocates a space of 50 pixels for the data to reside in.
+#	- Finally setting the preset to "cameraNames", selects a preset which will
+#	  automatically insert the associated data into the data field.
 #
 
 # display camera perspectives
