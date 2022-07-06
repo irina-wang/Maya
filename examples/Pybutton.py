@@ -6,6 +6,7 @@
 
 from builtins import int
 from maya.app.general.mayaMixin import MayaQWidgetDockableMixin
+from maya.OpenMaya import MCameraMessage
 from maya import cmds
 from maya import OpenMayaUI as omui
 from PySide2.QtCore import * 

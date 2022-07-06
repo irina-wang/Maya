@@ -10,6 +10,9 @@ from maya import OpenMayaUI as omui
 from PySide2.QtCore import * 
 from PySide2.QtGui import * 
 from PySide2.QtWidgets import *
+import maya.cmds as cmds
+
+
 customMixinWindow = None
 
 # ''' MayaQWidgetDockableMixin is not a workspace control in itself, it is added 
@@ -23,18 +26,30 @@ if not 'customMixinWindow' in globals():
 class DockableWidget(MayaQWidgetDockableMixin, QWidget):
 
     def __init__(self):
+        '''
+        Constructor, initiate the camera 
+        '''
         super().__init__()
-
+        self.cameraName = cmds.camera()
         self.initUI()
 
 
     def initUI(self):
+        '''
+        Constructor:
+
+        call init UI
+        '''
+
         layout = QHBoxLayout()
-        pushBtn = QPushButton('PushMe', self)
-        pushBtn.clicked.connect(self.buttonPush)
+        # pushBtn = QPushButton('PushMe', self)
+        # pushBtn.clicked.connect(self.buttonPush)
+
+        self.checkBox = QCheckBox('HUD', self)
+        self.checkBox.stateChanged.connect(self.OnOff)
 
 
-        layout.addWidget(pushBtn)
+        layout.addWidget(self.checkBox)
         layout.addStretch(1)
         self.setLayout(layout)
 
@@ -43,9 +58,57 @@ class DockableWidget(MayaQWidgetDockableMixin, QWidget):
         self.show()
 
 
- 
-    def buttonPush(self):
-        print('button pushed')
+    def getVal(self):
+        cameraShape = self.cameraName[1]
+        focalLength = cmds.camera(cameraShape, q=True, fl=True)
+        # zoom =  cmds.camera(cameraShape, q=True, zom=True)
+        return focalLength
+
+
+    def objectPosition(*args):
+        try:
+            selectedNodes = cmds.selectedNodes()
+            mainObj = selectedNodes[-1]
+            positionList = cmds.getAttr('%s.translate' % mainObj)
+            return positionList[0]
+        except:
+            return (0.0,0.0,0.0)
+
+
+    # def PositionVal(*args):
+    #     try:
+    #         selectedNodes = cmds.selectedNodes()
+    #         mainObj = selectedNodes[-1]
+
+    #         positionList = cmds.getAttr('%s.translate' % mainObj)
+    #         return positionList[0]
+    #     except:
+    #         return (0.0,0.0,0.0)
+
+
+    def ZoomVal(self, cameraName):
+        cameraShape = cameraName[1]
+        focalLength = cmds.camera(cameraShape, q=True, fl=True)
+        zoom =  cmds.camera(cameraShape, q=True, zom=True)
+        return (focalLength, zoom)
+
+    def OnOff(self):
+        '''
+        Invoked when checkBtn being called 
+        '''
+        if self.checkBox.isChecked():
+            print("CHECKED!")
+            cmds.headsUpDisplay( 'HUDObjectPosition', section=1, block=0, blockSize='medium', label='Position', labelFontSize='large', command=self.objectPosition, event='SelectionChanged', nodeChanges='attributeChange' )
+            # cmds.headsUpDisplay( 'HUDFocal', section=3, block=0, blockSize='medium', label='Position', labelFontSize='large', command=self.getVal, event='SelectionChanged', nodeChanges='attributeChange' )
+            # cmds.headsUpDisplay( 'HUDZoom', section=1, block=0, blockSize='medium', label='Position', labelFontSize='large', command=self.ZoomVal, event='SelectionChanged', nodeChanges='attributeChange' )
+        else:
+            print("UNCHECKED!")
+            cmds.headsUpDisplay( 'HUDObjectPosition', rem=True )
+            # cmds.headsUpDisplay( 'HUDFocal', rem=True )
+            
+
+
+
 # ''' A workspace control is created by calling show() on the DockableWidget class. 
 #     This control is only created once if the retain property is set to true, which 
 #     is the default. The uiScript argument passed to the show() method will be 
@@ -82,7 +145,7 @@ def DockableWidgetUIScript(restore=False):
         customMixinWindow.show(dockable=True, height=600, width=480, uiScript='DockableWidgetUIScript(restore=True)')
         
     return customMixinWindow
-	  
+      
 ''' Using the workspaceControl Maya command to query/edit flags about the created 
     workspace control can be achieved this way:
         maya.cmds.workspaceControl('customMayaMixinWindowWorkspaceControl', q=True, visible=True)
