@@ -4,6 +4,7 @@
 # agreement provided at the time of installation or download, or which
 # otherwise accompanies this software in either electronic or hard copy form.
 
+import maya.cmds as cmds
 from builtins import int
 from maya.app.general.mayaMixin import MayaQWidgetDockableMixin
 from maya import OpenMayaUI as omui
@@ -16,6 +17,11 @@ customMixinWindow = None
     as a child to a created workspace control. See help(MayaQWidgetDockableMixin) 
     for more details. The following class is a simple widget with a layout and a push button.
 ''' 
+def deleteControl(control):
+    if cmds.workspaceControl(control, q=True, exists=True):
+        cmds.workspaceControl(control,e=True, close=True)
+        cmds.deleteUI(control,control=True)
+
 class DockableWidget(MayaQWidgetDockableMixin, QWidget):
   def __init__(self, parent=None):
     super(DockableWidget, self).__init__(parent=parent)
@@ -75,6 +81,7 @@ def DockableWidgetUIScript(restore=False):
 '''
 
 def main():
+    deleteControl('customMayaMixinWindowWorkspaceControl')
     ui = DockableWidgetUIScript()
     return ui
 
