@@ -64,7 +64,7 @@ print(a, b)
 #
 
 # display camera perspectives
-cmds.headsUpDisplay('HUDCameraName', s=1, b=0, blockSize='medium', label='CameraName', labelFontSize='large', ba='center', dw=50 ,pre='cameraNames')
+cmds.headsUpDisplay('HUDCameraName', s=3, b=0, blockSize='medium', label='CameraName', labelFontSize='large', ba='center', dw=50 ,pre='cameraNames')
 
 #
 #Now, remove these two HUDs. Both can be removed in three ways: name, ID or position.
