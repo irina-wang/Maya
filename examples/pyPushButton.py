@@ -39,15 +39,39 @@ class DockableWidget(MayaQWidgetDockableMixin, QWidget):
         Initialize the widget UI
 
         '''
+        # create tab widgets
+        tabWidget = QTabWidget()
+        # label1 = QLabel("Widget in Tab 1.")
+
         # create a checkbox control for HeadUpDisplay 
         self.checkBox = QCheckBox('HUD', self)
         self.checkBox.stateChanged.connect(self.OnOff)
-
+        
         # arrange the box in the layout 
-        layout = QHBoxLayout()
-        layout.addWidget(self.checkBox)
-        layout.addStretch(1)
+        # pageLayout = QHBoxLayout()
+        # pageLayout.addWidget(self.checkBox)
+        # pageLayout.addStretch(1)
+
+        # TODO
+        label2 = QLabel("Widget in Tab 2.")
+        label3 = QLabel("Widget in Tab 3.")
+
+
+        tabWidget.addTab(self.checkBox, "Display")
+        tabWidget.addTab(label2, "Camera Shake")
+        tabWidget.addTab(label3, "Camera Control")
+
+        # self.addTab = QCheckBox('HUD', self)
+        
+        
+
+        # Grid layout for tabs
+        layout = QGridLayout()
         self.setLayout(layout)
+        layout.addWidget(tabWidget, 0, 0)
+
+        
+        # self.setLayout(pageLayout)
 
         self.move(300, 300)
         self.setWindowTitle('Camera Heads Up Display Control')
@@ -70,6 +94,7 @@ class DockableWidget(MayaQWidgetDockableMixin, QWidget):
         '''
         cameraShape = self.cameraName[1]
         camZoom =  cmds.camera(cameraShape, q=True, e=True, zom=True)
+        print('camZoom changed = ' + str(camZoom))
         return camZoom
 
 
@@ -123,8 +148,8 @@ class DockableWidget(MayaQWidgetDockableMixin, QWidget):
             # 'SoundNodeAdded', 'SoundNodeRemoved', 'ColorIndexChanged', 'deleteAll', 
             # 'NameChanged', 'symmetricModellingOptionsChanged', 'softSelectOptionsChanged', 'SetModified', 'xformConstraintOptionsChanged', 'undoXformCmd', 'redoXformCmd', 'linearToleranceChanged', 'angularToleranceChanged', 'nurbsToPolygonsPrefsChanged', 'nurbsCurveRebuildPrefsChanged', 'constructionHistoryChanged', 'threadCountChanged', 'SceneSaved', 'NewSceneOpened', 'SceneOpened', 'SceneImported', 'PreFileNewOrOpened', 'PreFileNew', 'PreFileOpened', 'PostSceneRead', 'renderSetupAutoSave', 'workspaceChanged', 'metadataVisualStatusChanged', 'freezeOptionsChanged', 'nurbsToSubdivPrefsChanged', 'selectionConstraintsChanged', 'PolyUVSetChanged', 'PolyUVSetDeleted', 'startColorPerVertexTool', 'stopColorPerVertexTool', 'start3dPaintTool', 'stop3dPaintTool', 'DragRelease', 'ModelPanelSetFocus', 'modelEditorChanged', 'gridDisplayChanged', 'interactionStyleChanged', 'axisAtOriginChanged', 'CurveRGBColorChanged', 'SelectPriorityChanged', 'snapModeChanged', 'MenuModeChanged', 'profilerSelectionChanged', 'texWindowEditorImageBaseColorChanged', 'texWindowEditorCheckerDensityChanged', 'texWindowEditorCheckerDisplayChanged', 'texWindowEditorDisplaySolidMapChanged', 'texWindowEditorShowup', 'texWindowEditorClose', 'activeHandleChanged', 'ChannelBoxLabelSelected', 'colorMgtOCIORulesEnabledChanged', 'colorMgtUserPrefsChanged', 'RenderSetupSelectionChanged', 'colorMgtEnabledChanged', 'colorMgtConfigFileEnableChanged', 'colorMgtConfigFilePathChanged', 'colorMgtConfigChanged', 'colorMgtWorkingSpaceChanged', 'colorMgtPrefsViewTransformChanged', 'colorMgtPrefsReloaded', 'colorMgtOutputChanged', 'colorMgtPlayblastOutputChanged', 'colorMgtRefreshed', 'selectionPipelineChanged', 'graphEditorChanged', 'graphEditorParamCurveSelected', 'graphEditorOutlinerHighlightChanged', 'graphEditorOutlinerListChanged', 'currentSoundNodeChanged', 'glFrameTrigger', 'activeTexHandleChanged', 'EditModeChanged', 'playbackRangeAboutToChange', 'playbackSpeedChanged', 'playbackModeChanged', 'playbackRangeSliderChanged', 'playbackByChanged', 'playbackRangeChanged', 'RenderViewCameraChanged', 'texScaleContextOptionsChanged', 'texRotateContextOptionsChanged', 'texMoveContextOptionsChanged', 'polyCutUVSteadyStrokeChanged', 'polyCutUVEventTexEditorCheckerDisplayChanged', 'polyCutUVShowTextureBordersChanged', 'polyCutUVShowUVShellColoringChanged', 'shapeEditorTreeviewSelectionChanged', 'poseEditorTreeviewSelectionChanged', 'sculptMeshCacheBlendShapeListChanged', 'sculptMeshCacheCloneSourceChanged', 'RebuildUIValues', 'cacheDestroyed', 'cachingPreferencesChanged', 'cachingSafeModeChanged', 'cachingEvaluationModeChanged', 'teTrackAdded', 'teTrackRemoved', 'teTrackNameChanged', 'teTrackModified', 'cteEventClipEditModeChanged', 'teEditorPrefsChanged']
             cmds.headsUpDisplay( 'HUDObjectPosition', section=1, block=0, blockSize='medium', label='Position', labelFontSize='large', command=self.objectPosition, event='SelectionChanged', nodeChanges='attributeChange' )
-            cmds.headsUpDisplay( 'HUDFocal', section=2, block=0, blockSize='medium', label='Focal', labelFontSize='large', command=self.getFocal, event='cameraChange' )
-            cmds.headsUpDisplay( 'HUDZoom', section=3, block=0, blockSize='medium', label='Zoom', labelFontSize='small', command=self.getZoom, event='cameraChange' )
+            cmds.headsUpDisplay( 'HUDFocal', section=2, block=0, blockSize='medium', label='Focal', labelFontSize='large', command=self.getFocal )
+            cmds.headsUpDisplay( 'HUDZoom', section=3, block=0, blockSize='medium', label='Zoom', labelFontSize='small', command=self.getZoom)
         else:
             # print("UNCHECKED!")
             cmds.headsUpDisplay( 'HUDObjectPosition', rem=True )
