@@ -16,7 +16,6 @@ from shiboken2 import wrapInstance
 
 import os.path
 
-
 '''  
 Get the mainWindow 
 
@@ -42,21 +41,27 @@ class DockableWidget(MayaQWidgetDockableMixin, QWidget):
         super().__init__(*args, **kwargs)
         self.setParent(mayaMainWindow)
         self.setWindowFlags(Qt.Window)
-        self.initUI()
-        self.setWindowTitle('Custom Maya Mixin Workspace Control')
 
         # add push buttons 
-        self.button1 = QPushButton()
-        self.button2 = QCheckBox()
+        
+        self.setWindowTitle('Custom Maya Mixin Workspace Control')
+      # if self.button1.isChecked()
+        self.button2.setChecked(True)
+        self.button2.toggled.connect( self.myCamera )
 
-        if self.button2.isChecked()
-        self.button1.setText('myCamera')
-      
+        self.initUI()
+   
+
+        
+    def initUI(self):
+
+        self.button1 = QPushButton()
+        self.button1.setText('PushMe')
+    
         layout = QVBoxLayout()
         layout.addWidget(self.button1)
         self.setLayout(layout)
         
-    def initUI(self):
         loader = QUiLoader()
         file = QFile(currentDir)
         file.open(QFile.ReadOnly)
@@ -69,14 +74,13 @@ class DockableWidget(MayaQWidgetDockableMixin, QWidget):
         
         self.ui.okButton.clicked.connect( self.doOK )
         self.ui.cancelButton.clicked.connect( self.doCancel )
+
+        
+
+
     
     def myCamera(self):
-        nName = self.ui.nameLineEdit.text()
-        nType = self.ui.typeComboBox.currentText()
-        if len(nName) > 0:
-            cmds.createNode( nType, n=nName )
-        else:
-            cmds.createNode( nType )
+        print('clicked')
         
     def doOK(self):
         nName = self.ui.nameLineEdit.text()
