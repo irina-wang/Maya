@@ -1,8 +1,11 @@
-# Copyright 2017 Autodesk, Inc. All rights reserved.
-#
-# Use of this software is subject to the terms of the Autodesk license
-# agreement provided at the time of installation or download, or which
-# otherwise accompanies this software in either electronic or hard copy form.
+# Author: Irina Mengqi Wang, 07/2022 
+# Project: Camera_HUD (In-Progress)
+# --------
+# Outline: 
+#       1. heads-up display (HUD) - basic UI programming in Maya 
+#   --> 2. Autofocus tools (Reticle)
+#       3. Customizable camera shakes
+
 
 from builtins import int
 from maya.app.general.mayaMixin import MayaQWidgetDockableMixin
@@ -15,11 +18,7 @@ import maya.cmds as cmds
 
 customMixinWindow = None
 
-# ''' MayaQWidgetDockableMixin is not a workspace control in itself, it is added 
-#     as a child to a created workspace control. See help(MayaQWidgetDockableMixin) 
-#     for more details. The following class is a simple widget with a layout and a push button.
-# ''' 
-
+# check 
 if not 'customMixinWindow' in globals():
     customMixinWindow = None
     
@@ -27,7 +26,8 @@ class DockableWidget(MayaQWidgetDockableMixin, QWidget):
 
     def __init__(self):
         '''
-        Constructor, initiate the camera 
+        Constructor: instantiate the camera object and call UI methods
+
         '''
         super().__init__()
         self.cameraName = cmds.camera()
@@ -36,97 +36,82 @@ class DockableWidget(MayaQWidgetDockableMixin, QWidget):
 
     def initUI(self):
         '''
-        Constructor:
+        Initialize the widget UI
 
-        call init UI
         '''
-
-        layout = QHBoxLayout()
-        # pushBtn = QPushButton('PushMe', self)
-        # pushBtn.clicked.connect(self.buttonPush)
-
+        # create a checkbox control for HeadUpDisplay 
         self.checkBox = QCheckBox('HUD', self)
         self.checkBox.stateChanged.connect(self.OnOff)
 
-
+        # arrange the box in the layout 
+        layout = QHBoxLayout()
         layout.addWidget(self.checkBox)
         layout.addStretch(1)
         self.setLayout(layout)
 
         self.move(300, 300)
-        self.setWindowTitle('testLayout')
+        self.setWindowTitle('Camera Heads Up Display Control')
         self.show()
 
 
-    def getVal(self):
+    def getFocal(self):
+        '''
+        Get the focal length of the selected camera
+
+        '''
         cameraShape = self.cameraName[1]
-        focalLength = cmds.camera(cameraShape, q=True, fl=True)
-        # zoom =  cmds.camera(cameraShape, q=True, zom=True)
-        return focalLength
+        camfocalLength = cmds.camera(cameraShape, q=True, fl=True)
+        return camfocalLength
+
+    def getZoom(self):
+        '''
+        Get the Zoom length for the selected camera
+
+        '''
+        cameraShape = self.cameraName[1]
+        camZoom =  cmds.camera(cameraShape, q=True, e=True, zom=True)
+        return camZoom
 
 
     def objectPosition(*args):
+        '''
+        Get the object position of the selected item
+
+        '''
+
         try:
-            selectedNodes = cmds.selectedNodes()
-            mainObj = selectedNodes[-1]
-            positionList = cmds.getAttr('%s.translate' % mainObj)
+            selectedNodes = cmds.selectedNodes() 
+            mainObj = selectedNodes[-1] # get the select node
+            positionList = cmds.getAttr('%s.translate' % mainObj) 
             return positionList[0]
         except:
             return (0.0,0.0,0.0)
 
 
-    # def PositionVal(*args):
-    #     try:
-    #         selectedNodes = cmds.selectedNodes()
-    #         mainObj = selectedNodes[-1]
-
-    #         positionList = cmds.getAttr('%s.translate' % mainObj)
-    #         return positionList[0]
-    #     except:
-    #         return (0.0,0.0,0.0)
-
-
-    def ZoomVal(self, cameraName):
-        cameraShape = cameraName[1]
-        focalLength = cmds.camera(cameraShape, q=True, fl=True)
-        zoom =  cmds.camera(cameraShape, q=True, zom=True)
-        return (focalLength, zoom)
-
     def OnOff(self):
         '''
-        Invoked when checkBtn being called 
+        Respond to the toggling of a checkbox, display the HUD when box is 
+        checked and vice versa. 
+
         '''
         if self.checkBox.isChecked():
-            print("CHECKED!")
+            # print("CHECKED!")
             cmds.headsUpDisplay( 'HUDObjectPosition', section=1, block=0, blockSize='medium', label='Position', labelFontSize='large', command=self.objectPosition, event='SelectionChanged', nodeChanges='attributeChange' )
-            # cmds.headsUpDisplay( 'HUDFocal', section=3, block=0, blockSize='medium', label='Position', labelFontSize='large', command=self.getVal, event='SelectionChanged', nodeChanges='attributeChange' )
-            # cmds.headsUpDisplay( 'HUDZoom', section=1, block=0, blockSize='medium', label='Position', labelFontSize='large', command=self.ZoomVal, event='SelectionChanged', nodeChanges='attributeChange' )
+            cmds.headsUpDisplay( 'HUDFocal', section=2, block=0, blockSize='medium', label='Focal', labelFontSize='large', command=self.getFocal, event='SelectionChanged', nodeChanges='attributeChange' )
+            cmds.headsUpDisplay( 'HUDZoom', section=3, block=0, blockSize='medium', label='Zoom', labelFontSize='medium', command=self.getZoom, event='SelectionChanged', nodeChanges='attributeChange' )
         else:
-            print("UNCHECKED!")
+            # print("UNCHECKED!")
             cmds.headsUpDisplay( 'HUDObjectPosition', rem=True )
-            # cmds.headsUpDisplay( 'HUDFocal', rem=True )
-            
+            cmds.headsUpDisplay( 'HUDFocal', rem=True )
+            cmds.headsUpDisplay( 'HUDZoom', rem=True )
 
 
-
-# ''' A workspace control is created by calling show() on the DockableWidget class. 
-#     This control is only created once if the retain property is set to true, which 
-#     is the default. The uiScript argument passed to the show() method will be 
-#     invoked every time this control is opened/restored. It is recommended to add 
-#     the proper import statement in the uiScript argument.
-    
-#     For example, in renderSetup.py file the UIScript for renderSetupWindow is
-#       "uiScript='import maya.app.renderSetup.views.renderSetup as renderSetup\nrenderSetup.createUI(restore=True)'"
-        
-#     The following method needs to be invoked in order to create the workspace control for the example above.
-#     If the control is being restored, then Maya will call the method by passing restore=True
-# '''    
 def DockableWidgetUIScript(restore=False):
+    ''' 
+        When the control is restoring, the workspace control has already been 
+        created and all that needs to be done is restoring its UI.
+    '''
     global customMixinWindow
-  
-#   ''' When the control is restoring, the workspace control has already been created and
-#       all that needs to be done is restoring its UI.
-#   '''
     if restore == True:
         # Grab the created workspace control with the following.
         restoredControl = omui.MQtUtil.getCurrentParent()
@@ -146,19 +131,9 @@ def DockableWidgetUIScript(restore=False):
         
     return customMixinWindow
       
-''' Using the workspaceControl Maya command to query/edit flags about the created 
-    workspace control can be achieved this way:
-        maya.cmds.workspaceControl('customMayaMixinWindowWorkspaceControl', q=True, visible=True)
-        maya.cmds.workspaceControl('customMayaMixinWindowWorkspaceControl', e=True, visible=False)
-        
-    Note that Maya automatically appends the "WorkspaceControl" string to the 
-    workspace control child object name. In this example it is the child widget name (customMayaMixinWindow)
-'''
-
 def main():
     ui = DockableWidgetUIScript()
     return ui
-
 
 if __name__ == '__main__':
     main()
