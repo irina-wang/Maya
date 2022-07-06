@@ -95,14 +95,14 @@ class DockableWidget(MayaQWidgetDockableMixin, QWidget):
         except:
             print('Error: No object selected. ')
             return ''
-		   
+	
+ 
 
     def objectPosition(*args):
         '''
         Get the object position of the selected item
 
         '''
-
         try:
             selectedNodes = cmds.selectedNodes() 
             mainObj = selectedNodes[-1] # get the select node
@@ -117,6 +117,7 @@ class DockableWidget(MayaQWidgetDockableMixin, QWidget):
         Respond to the toggling of a checkbox, display the HUD when box is 
         checked and vice versa. 
 
+        TODO: format the HUD
         '''
         if self.checkBox.isChecked():
             # print("CHECKED!")
