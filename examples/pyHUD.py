@@ -1,3 +1,5 @@
+from pydoc import visiblename
+from re import L
 import maya.cmds as cmds
 
 from builtins import object
@@ -49,6 +51,18 @@ def cameraName(*args):
 
 cmds.headsUpDisplay('HUDName', section=1, block=0, blockSize='medium', label='Cam', labelFontSize='large', command=objectPosition, event='SelectionChanged', nodeChanges='attributeChange' )
 
+def getTime(self):
+	'''
+	Get 
+	'''
+	try:
+		selectedNodes = cmds.selectedNodes()
+		mainObj = selectedNodes[-1]
+		return mainObj[1:] # format the name 
+	except:
+		print('Error: No object selected. ')
+		return ''
+
 
 #
 # Now, create a HUD object to display the return value of the above procedure
@@ -88,4 +102,52 @@ cmds.headsUpDisplay('HUDCameraName', s=3, b=0, blockSize='medium', label='Camera
 cmds.headsUpDisplay( 'HUDObjectPosition', rem=True )
 
 # cmds.headsUpDisplay( rp=(7, 0) )
+	
+
+'''
+Display button 
+
+'''
+import maya.cmds as cmds
+
+# Define a "Hello!" counter procedure. This procedure will output
+# "Hello! [number]"
+# each time it is run. The number is incremented at the end of each call.
+#
+gHelloCount = 0
+
+
+HUDID = 0
+
+def HUDButtonReleased(*args):
+	global HUDID
+	if not HUDID:
+		print('start recording')
+		HUDID = cmds.headsUpDisplay('HUDTime', section=1, b=6, ba='left' , blockSize='medium', label='Time', labelFontSize='large', command=getTime)
+	else:
+		print('end recording')
+		cmds.headsUpDisplay('HUDTime', rem=True )
+		HUDID = 0
+
+	# lh
+	# time = xxxx
+	# if time is visiblename:
+    # 	print('end recording')
+	# cmds.headsUpDisplay('HUDTime', sg=True, section=1, b=6, ba='left' , blockSize='medium', label='Time', labelFontSize='large', command=getTime)
+
+def getTime():
+    print('1:000000000')
+
+
+cmds.hudButton('HUDHelloButton', s=1, b=5, vis=1, l='Record', bw=60, bsh='roundRectangle',  rc=HUDButtonReleased )
+	
+
+
+
+# def HUDButtonPressed():
+# 	print('start recording')
+
+# Now create our button. Only execute on mouse release.
+#
+cmds.hudButton('HUDHelloButton', s=1, b=5, vis=1, l='Record', bw=60, bsh='roundRectangle',  rc=HUDButtonReleased )
 	
