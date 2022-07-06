@@ -96,9 +96,35 @@ class DockableWidget(MayaQWidgetDockableMixin, QWidget):
         '''
         if self.checkBox.isChecked():
             # print("CHECKED!")
+            # event change: # Result: ['dbTraceChanged', 'resourceLimitStateChange', 
+            # 'linearUnitChanged', 'timeUnitChanged', 'angularUnitChanged', 'Undo',
+            #  'undoSupressed', 'Redo', 'customEvaluatorChanged', 'serialExecutorFallback',
+            #  'timeChanged', 'currentContainerChange', 'quitApplication', 'idleHigh', 
+            # 'idle', 'idleVeryLow', 'RecentCommandChanged', 'ToolChanged', 'PostToolChanged', 
+            # 'ToolDirtyChanged', 'ToolSettingsChanged', 'DisplayRGBColorChanged',
+            #  'animLayerRebuild', 'animLayerRefresh', 'animLayerAnimationChanged', 
+            # 'animLayerLockChanged', 'animLayerBaseLockChanged', 'animLayerGhostChanged', 
+            # 'cteEventKeyingTargetForClipChanged', 'cteEventKeyingTargetForLayerChanged', 
+            # 'cteEventKeyingTargetForInvalidChanged', 'teClipAdded', 'teClipModified', 'teClipRemoved', 
+            # 'teCompositionAdded', 'teCompositionRemoved', 'teCompositionActiveChanged', 
+            # 'teCompositionNameChanged', 'teMuteChanged', 'cameraChange', 
+            # 'cameraDisplayAttributesChange', 'GhostListChanged', 'SelectionChanged', 
+            # 'UFESelectionChanged', 'PreSelectionChangedTriggered', 
+            # 'LiveListChanged', 'ActiveViewChanged', 'SelectModeChanged', 
+            # 'SelectTypeChanged', 'SelectPreferenceChanged', 'DisplayPreferenceChanged', 
+            # 'DagObjectCreated', 'transformLockChange', 'renderLayerManagerChange', 
+            # 'renderLayerChange', 'displayLayerManagerChange', 'displayLayerAdded', 
+            # 'displayLayerDeleted', 'displayLayerVisibilityChanged', 'displayLayerChange', 
+            # 'renderPassChange', 'renderPassSetChange', 'renderPassSetMembershipChange', 
+            # 'passContributionMapChange', 'DisplayColorChanged', 'lightLinkingChanged', 
+            # 'lightLinkingChangedNonSG', 'UvTileProxyDirtyChangeTrigger', 
+            # 'preferredRendererChanged', 'polyTopoSymmetryValidChanged', 
+            # 'SceneSegmentChanged', 'PostSceneSegmentChanged', 'SequencerActiveShotChanged', 
+            # 'SoundNodeAdded', 'SoundNodeRemoved', 'ColorIndexChanged', 'deleteAll', 
+            # 'NameChanged', 'symmetricModellingOptionsChanged', 'softSelectOptionsChanged', 'SetModified', 'xformConstraintOptionsChanged', 'undoXformCmd', 'redoXformCmd', 'linearToleranceChanged', 'angularToleranceChanged', 'nurbsToPolygonsPrefsChanged', 'nurbsCurveRebuildPrefsChanged', 'constructionHistoryChanged', 'threadCountChanged', 'SceneSaved', 'NewSceneOpened', 'SceneOpened', 'SceneImported', 'PreFileNewOrOpened', 'PreFileNew', 'PreFileOpened', 'PostSceneRead', 'renderSetupAutoSave', 'workspaceChanged', 'metadataVisualStatusChanged', 'freezeOptionsChanged', 'nurbsToSubdivPrefsChanged', 'selectionConstraintsChanged', 'PolyUVSetChanged', 'PolyUVSetDeleted', 'startColorPerVertexTool', 'stopColorPerVertexTool', 'start3dPaintTool', 'stop3dPaintTool', 'DragRelease', 'ModelPanelSetFocus', 'modelEditorChanged', 'gridDisplayChanged', 'interactionStyleChanged', 'axisAtOriginChanged', 'CurveRGBColorChanged', 'SelectPriorityChanged', 'snapModeChanged', 'MenuModeChanged', 'profilerSelectionChanged', 'texWindowEditorImageBaseColorChanged', 'texWindowEditorCheckerDensityChanged', 'texWindowEditorCheckerDisplayChanged', 'texWindowEditorDisplaySolidMapChanged', 'texWindowEditorShowup', 'texWindowEditorClose', 'activeHandleChanged', 'ChannelBoxLabelSelected', 'colorMgtOCIORulesEnabledChanged', 'colorMgtUserPrefsChanged', 'RenderSetupSelectionChanged', 'colorMgtEnabledChanged', 'colorMgtConfigFileEnableChanged', 'colorMgtConfigFilePathChanged', 'colorMgtConfigChanged', 'colorMgtWorkingSpaceChanged', 'colorMgtPrefsViewTransformChanged', 'colorMgtPrefsReloaded', 'colorMgtOutputChanged', 'colorMgtPlayblastOutputChanged', 'colorMgtRefreshed', 'selectionPipelineChanged', 'graphEditorChanged', 'graphEditorParamCurveSelected', 'graphEditorOutlinerHighlightChanged', 'graphEditorOutlinerListChanged', 'currentSoundNodeChanged', 'glFrameTrigger', 'activeTexHandleChanged', 'EditModeChanged', 'playbackRangeAboutToChange', 'playbackSpeedChanged', 'playbackModeChanged', 'playbackRangeSliderChanged', 'playbackByChanged', 'playbackRangeChanged', 'RenderViewCameraChanged', 'texScaleContextOptionsChanged', 'texRotateContextOptionsChanged', 'texMoveContextOptionsChanged', 'polyCutUVSteadyStrokeChanged', 'polyCutUVEventTexEditorCheckerDisplayChanged', 'polyCutUVShowTextureBordersChanged', 'polyCutUVShowUVShellColoringChanged', 'shapeEditorTreeviewSelectionChanged', 'poseEditorTreeviewSelectionChanged', 'sculptMeshCacheBlendShapeListChanged', 'sculptMeshCacheCloneSourceChanged', 'RebuildUIValues', 'cacheDestroyed', 'cachingPreferencesChanged', 'cachingSafeModeChanged', 'cachingEvaluationModeChanged', 'teTrackAdded', 'teTrackRemoved', 'teTrackNameChanged', 'teTrackModified', 'cteEventClipEditModeChanged', 'teEditorPrefsChanged']
             cmds.headsUpDisplay( 'HUDObjectPosition', section=1, block=0, blockSize='medium', label='Position', labelFontSize='large', command=self.objectPosition, event='SelectionChanged', nodeChanges='attributeChange' )
-            cmds.headsUpDisplay( 'HUDFocal', section=2, block=0, blockSize='medium', label='Focal', labelFontSize='large', command=self.getFocal, event='SelectionChanged', nodeChanges='attributeChange' )
-            cmds.headsUpDisplay( 'HUDZoom', section=3, block=0, blockSize='medium', label='Zoom', labelFontSize='medium', command=self.getZoom, event='SelectionChanged', nodeChanges='attributeChange' )
+            cmds.headsUpDisplay( 'HUDFocal', section=2, block=0, blockSize='medium', label='Focal', labelFontSize='large', command=self.getFocal, event='cameraChange' )
+            cmds.headsUpDisplay( 'HUDZoom', section=3, block=0, blockSize='medium', label='Zoom', labelFontSize='small', command=self.getZoom, event='cameraChange' )
         else:
             # print("UNCHECKED!")
             cmds.headsUpDisplay( 'HUDObjectPosition', rem=True )
