@@ -18,7 +18,7 @@ import maya.cmds as cmds
 
 customMixinWindow = None
 
-# check 
+# Delete workspace already present
 if not 'customMixinWindow' in globals():
     customMixinWindow = None
     
@@ -38,45 +38,31 @@ class DockableWidget(MayaQWidgetDockableMixin, QWidget):
         '''
         Initialize the widget UI
 
-        '''
-        # create tab widgets
-        tabWidget = QTabWidget()
-        # label1 = QLabel("Widget in Tab 1.")
-
+        '''        
+        # Tab 1: 
         # create a checkbox control for HeadUpDisplay 
         self.checkBox = QCheckBox('HUD', self)
         self.checkBox.stateChanged.connect(self.OnOff)
-        
-        # arrange the box in the layout 
-        # pageLayout = QHBoxLayout()
-        # pageLayout.addWidget(self.checkBox)
-        # pageLayout.addStretch(1)
 
-        # TODO
-        label2 = QLabel("Widget in Tab 2.")
-        label3 = QLabel("Widget in Tab 3.")
+        # TODO: Tab2 & Tab3
+        label2 = QLabel("Widget in Tab 2 for Camera Control.")
+        label3 = QLabel("Widget in Tab 3 for Camera Shake.")
 
-
+        # Create tab widgets
+        # append tabs to the tabWidget 
+        tabWidget = QTabWidget()
         tabWidget.addTab(self.checkBox, "Display")
-        tabWidget.addTab(label2, "Camera Shake")
-        tabWidget.addTab(label3, "Camera Control")
-
-        # self.addTab = QCheckBox('HUD', self)
-        
-        
+        tabWidget.addTab(label2, "Camera Control")
+        tabWidget.addTab(label3, "Camera Shake")
 
         # Grid layout for tabs
         layout = QGridLayout()
         self.setLayout(layout)
         layout.addWidget(tabWidget, 0, 0)
 
-        
-        # self.setLayout(pageLayout)
-
         self.move(300, 300)
         self.setWindowTitle('Camera Heads Up Display Control')
         self.show()
-
 
     def getFocal(self):
         '''
@@ -97,6 +83,15 @@ class DockableWidget(MayaQWidgetDockableMixin, QWidget):
         print('camZoom changed = ' + str(camZoom))
         return camZoom
 
+    def getCamName(self):
+        try:
+            selectedNodes = cmds.selectedNodes()
+            mainObj = selectedNodes[-1]
+            return mainObj[1:] # format the name 
+        except:
+            print('Error: No object selected. ')
+            return ''
+		   
 
     def objectPosition(*args):
         '''
@@ -147,14 +142,21 @@ class DockableWidget(MayaQWidgetDockableMixin, QWidget):
             # 'SceneSegmentChanged', 'PostSceneSegmentChanged', 'SequencerActiveShotChanged', 
             # 'SoundNodeAdded', 'SoundNodeRemoved', 'ColorIndexChanged', 'deleteAll', 
             # 'NameChanged', 'symmetricModellingOptionsChanged', 'softSelectOptionsChanged', 'SetModified', 'xformConstraintOptionsChanged', 'undoXformCmd', 'redoXformCmd', 'linearToleranceChanged', 'angularToleranceChanged', 'nurbsToPolygonsPrefsChanged', 'nurbsCurveRebuildPrefsChanged', 'constructionHistoryChanged', 'threadCountChanged', 'SceneSaved', 'NewSceneOpened', 'SceneOpened', 'SceneImported', 'PreFileNewOrOpened', 'PreFileNew', 'PreFileOpened', 'PostSceneRead', 'renderSetupAutoSave', 'workspaceChanged', 'metadataVisualStatusChanged', 'freezeOptionsChanged', 'nurbsToSubdivPrefsChanged', 'selectionConstraintsChanged', 'PolyUVSetChanged', 'PolyUVSetDeleted', 'startColorPerVertexTool', 'stopColorPerVertexTool', 'start3dPaintTool', 'stop3dPaintTool', 'DragRelease', 'ModelPanelSetFocus', 'modelEditorChanged', 'gridDisplayChanged', 'interactionStyleChanged', 'axisAtOriginChanged', 'CurveRGBColorChanged', 'SelectPriorityChanged', 'snapModeChanged', 'MenuModeChanged', 'profilerSelectionChanged', 'texWindowEditorImageBaseColorChanged', 'texWindowEditorCheckerDensityChanged', 'texWindowEditorCheckerDisplayChanged', 'texWindowEditorDisplaySolidMapChanged', 'texWindowEditorShowup', 'texWindowEditorClose', 'activeHandleChanged', 'ChannelBoxLabelSelected', 'colorMgtOCIORulesEnabledChanged', 'colorMgtUserPrefsChanged', 'RenderSetupSelectionChanged', 'colorMgtEnabledChanged', 'colorMgtConfigFileEnableChanged', 'colorMgtConfigFilePathChanged', 'colorMgtConfigChanged', 'colorMgtWorkingSpaceChanged', 'colorMgtPrefsViewTransformChanged', 'colorMgtPrefsReloaded', 'colorMgtOutputChanged', 'colorMgtPlayblastOutputChanged', 'colorMgtRefreshed', 'selectionPipelineChanged', 'graphEditorChanged', 'graphEditorParamCurveSelected', 'graphEditorOutlinerHighlightChanged', 'graphEditorOutlinerListChanged', 'currentSoundNodeChanged', 'glFrameTrigger', 'activeTexHandleChanged', 'EditModeChanged', 'playbackRangeAboutToChange', 'playbackSpeedChanged', 'playbackModeChanged', 'playbackRangeSliderChanged', 'playbackByChanged', 'playbackRangeChanged', 'RenderViewCameraChanged', 'texScaleContextOptionsChanged', 'texRotateContextOptionsChanged', 'texMoveContextOptionsChanged', 'polyCutUVSteadyStrokeChanged', 'polyCutUVEventTexEditorCheckerDisplayChanged', 'polyCutUVShowTextureBordersChanged', 'polyCutUVShowUVShellColoringChanged', 'shapeEditorTreeviewSelectionChanged', 'poseEditorTreeviewSelectionChanged', 'sculptMeshCacheBlendShapeListChanged', 'sculptMeshCacheCloneSourceChanged', 'RebuildUIValues', 'cacheDestroyed', 'cachingPreferencesChanged', 'cachingSafeModeChanged', 'cachingEvaluationModeChanged', 'teTrackAdded', 'teTrackRemoved', 'teTrackNameChanged', 'teTrackModified', 'cteEventClipEditModeChanged', 'teEditorPrefsChanged']
-            cmds.headsUpDisplay( 'HUDObjectPosition', section=1, block=0, blockSize='medium', label='Position', labelFontSize='large', command=self.objectPosition, event='SelectionChanged', nodeChanges='attributeChange' )
+            cmds.headsUpDisplay( 'HUDObjectPosition', section=1, block=1, blockSize='medium', label='Position', labelFontSize='large', command=self.objectPosition, event='SelectionChanged', nodeChanges='attributeChange' )
             cmds.headsUpDisplay( 'HUDFocal', section=2, block=0, blockSize='medium', label='Focal', labelFontSize='large', command=self.getFocal )
-            cmds.headsUpDisplay( 'HUDZoom', section=3, block=0, blockSize='medium', label='Zoom', labelFontSize='small', command=self.getZoom)
+            cmds.headsUpDisplay( 'HUDZoom', section=3, block=0, blockSize='medium', label='Zoom', labelFontSize='large', command=self.getZoom)
+            cmds.headsUpDisplay( 'HUDName', section=1, b=0, ba='left' , blockSize='medium', label='Cam', labelFontSize='large', command=self.getCamName, event='SelectionChanged', nodeChanges='attributeChange' )
+
+            # record time
+            # video format 
+            # filter??
+
         else:
             # print("UNCHECKED!")
             cmds.headsUpDisplay( 'HUDObjectPosition', rem=True )
             cmds.headsUpDisplay( 'HUDFocal', rem=True )
             cmds.headsUpDisplay( 'HUDZoom', rem=True )
+            cmds.headsUpDisplay( 'HUDName', rem=True )
 
 
 def DockableWidgetUIScript(restore=False):
