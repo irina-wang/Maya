@@ -84,6 +84,10 @@ class DockableWidget(MayaQWidgetDockableMixin, QWidget):
         return camZoom
 
     def getCamName(self):
+        '''
+        Get Camera name, change upon selection node change
+        TODO: check if the object is a camera
+        '''
         try:
             selectedNodes = cmds.selectedNodes()
             mainObj = selectedNodes[-1]
