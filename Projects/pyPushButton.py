@@ -1,4 +1,3 @@
-
 ################################################################################
 # Author: Irina Mengqi Wang, 07/2022 
 # Project: Camera_HUD (In-Progress)
@@ -10,10 +9,6 @@
 #       3. Customizable camera shakes                               IN-PROGRESS
 #
 ################################################################################
-
-# TODO 07/07
-#  3. Pretty layout 
-#  4. Comments 
 
 from builtins import int
 from maya.app.general.mayaMixin import MayaQWidgetDockableMixin
@@ -30,13 +25,14 @@ customMixinWindow = None
 if not 'customMixinWindow' in globals():
     customMixinWindow = None
 
-# placed in a 2D inactive overlay plane on the 3D viewport
 class camDockableWidget(MayaQWidgetDockableMixin, QWidget):
-
+    """ 
+        This class places a HUD plane for camera attributes 
+        on the 3D viewport
+    """
     def __init__(self):
         """
         Constructor: instantiate the camera object and call UI methods
-
         """
         super().__init__()
         self.cameraName = cmds.camera()
@@ -46,12 +42,9 @@ class camDockableWidget(MayaQWidgetDockableMixin, QWidget):
     def initUI(self):
         """
         Initialize the widget UI
-
         """        
         # Tab 1: HeadUpDisplay
         # create Checkbox for each attribute to be displayed
-        # self.checkBox = QCheckBox('HUD')
-        # self.checkBox.stateChanged.connect(self.OnOff)
         
         self.NameCheckBox = QCheckBox('Camera Name')
         self.NameCheckBox.stateChanged.connect(self.CamNameOnOff)
@@ -65,6 +58,7 @@ class camDockableWidget(MayaQWidgetDockableMixin, QWidget):
         self.ZoomCheckBox = QCheckBox('Zoom')
         self.ZoomCheckBox.stateChanged.connect(self.ZoomOnOff)
         
+        # add checkbox to layout 
         tabPage = QWidget()
         tabLayout = QVBoxLayout()
         tabPage.setLayout(tabLayout)
@@ -73,11 +67,13 @@ class camDockableWidget(MayaQWidgetDockableMixin, QWidget):
         tabLayout.addWidget(self.FocalCheckBox)
         tabLayout.addWidget(self.ZoomCheckBox)
 
-        # tabLayout.addWidget(self.checkBox)
-
-        # TODO: Tab2 & Tab3
+        # !!!!!!!!!!!!!!!!!!!!!! TODO !!!!!!!!!!!!!!!!!!!!!!!! 
+        # Tab2: Camera Control
         label2 = QLabel("Widget in Tab 2 for Camera Control.")
+
+        # Tab3: Camera Shake
         label3 = QLabel("Widget in Tab 3 for Camera Shake.")
+        # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
         # Create tab widgets
         # append tabs to the tabWidget 
@@ -92,23 +88,26 @@ class camDockableWidget(MayaQWidgetDockableMixin, QWidget):
         layout.addWidget(tabWidget, 0, 0)
 
         self.move(300, 300)
-        self.setWindowTitle('Camera Heads Up Display Control')
+        self.setWindowTitle('Camera Heads-Up-Display Control')
         self.show()
 
+    # ========================================================
+    #  
+    #   Methods to get attribute value. 
+    #
+    # ========================================================
 
     def getFocal(self):
         """
         Get the focal length of the selected camera
-
         """
-        cameraShape = self.cameraName[1]
+        cameraShape = self.cameraName[1] 
         camfocalLength = cmds.camera(cameraShape, q=True, fl=True)
         return camfocalLength
 
     def getZoom(self):
         """
         Get the Zoom length for the selected camera
-
         """
         cameraShape = self.cameraName[1]
         camZoom =  cmds.camera(cameraShape, q=True, e=True, zom=True)
@@ -127,7 +126,7 @@ class camDockableWidget(MayaQWidgetDockableMixin, QWidget):
             print('Error: No object selected. ')
             return ''
 	
-    def objectPosition(*args):
+    def getObjectPosition(*args):
         """
         Get the object position of the selected item
         TODO: check if the object is a camera
@@ -140,6 +139,12 @@ class camDockableWidget(MayaQWidgetDockableMixin, QWidget):
         except:
             return (0.0,0.0,0.0)
 
+    # ========================================================
+    #  
+    #   Methods to control section display On/Off.
+    #
+    # ========================================================
+
     def CamNameOnOff(self):
         if self.NameCheckBox.isChecked():
             cmds.headsUpDisplay( 'HUDName', section=1, b=0, ba='left' , blockSize='medium', label='Cam', labelFontSize='large', command=self.getCamName, event='SelectionChanged', nodeChanges='attributeChange' )
@@ -148,7 +153,7 @@ class camDockableWidget(MayaQWidgetDockableMixin, QWidget):
 
     def PosOnOff(self):
         if self.PosCheckBox.isChecked():
-            cmds.headsUpDisplay( 'HUDObjectPosition', section=1, block=1, blockSize='medium', label='Position', labelFontSize='large', command=self.objectPosition, event='SelectionChanged', nodeChanges='attributeChange', vis=self.checkBox.isChecked())        
+            cmds.headsUpDisplay( 'HUDObjectPosition', section=1, block=1, blockSize='medium', label='Position', labelFontSize='large', command=self.getObjectPosition, event='SelectionChanged', nodeChanges='attributeChange')        
         else:
             cmds.headsUpDisplay( 'HUDObjectPosition', rem=True )
 
@@ -163,28 +168,6 @@ class camDockableWidget(MayaQWidgetDockableMixin, QWidget):
             cmds.headsUpDisplay( 'HUDFocal', section=2, block=0, blockSize='medium', label='Focal', labelFontSize='large', command=self.getFocal, atr=True)
         else:
             cmds.headsUpDisplay( 'HUDFocal', rem=True )
-
-    
-
-    # def OnOff(self):
-    #     """
-    #     Respond to the toggling of a checkbox, display the HUD when box is 
-    #     checked and vice versa. 
-
-    #     TODO: format the HUD
-    #     """
-    #     if self.checkBox.isChecked():
-    #         cmds.headsUpDisplay( 'HUDObjectPosition', section=1, block=1, blockSize='medium', label='Position', labelFontSize='large', command=self.objectPosition, event='SelectionChanged', nodeChanges='attributeChange', vis=self.checkBox.isChecked())
-    #         cmds.headsUpDisplay( 'HUDFocal', section=2, block=0, blockSize='medium', label='Focal', labelFontSize='large', command=self.getFocal, atr=True)
-    #         cmds.headsUpDisplay( 'HUDZoom', section=3, block=0, blockSize='medium', label='Zoom', labelFontSize='large', command=self.getZoom, atr=True)
-    #         cmds.headsUpDisplay( 'HUDName', section=1, b=0, ba='left' , blockSize='medium', label='Cam', labelFontSize='large', command=self.getCamName, event='SelectionChanged', nodeChanges='attributeChange' )
-
-    #     else:
-    #         # print("UNCHECKED!")
-    #         cmds.headsUpDisplay( 'HUDObjectPosition', rem=True )
-    #         cmds.headsUpDisplay( 'HUDFocal', rem=True )
-    #         cmds.headsUpDisplay( 'HUDZoom', rem=True )
-    #         cmds.headsUpDisplay( 'HUDName', rem=True )
 
 
 def camDockableWidgetUIScript(restore=False):
