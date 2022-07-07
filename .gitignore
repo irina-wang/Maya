@@ -3,3 +3,6 @@
 
 # Ignore files in library
 devkitBase/lib
+devkitBase
+examples
+
