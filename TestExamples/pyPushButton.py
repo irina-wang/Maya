@@ -30,7 +30,7 @@ if not 'customMixinWindow' in globals():
 
 
 # placed in a 2D inactive overlay plane on the 3D viewport
-class camDockableWidget(MayaQWidgetDockableMixin, QWidget):
+class DockableWidget(MayaQWidgetDockableMixin, QWidget):
 
     def __init__(self):
         '''
@@ -104,6 +104,8 @@ class camDockableWidget(MayaQWidgetDockableMixin, QWidget):
             print('Error: No object selected. ')
             return ''
 	
+ 
+
     def objectPosition(*args):
         '''
         Get the object position of the selected item
@@ -172,7 +174,7 @@ class camDockableWidget(MayaQWidgetDockableMixin, QWidget):
             cmds.headsUpDisplay( 'HUDName', rem=True )
 
 
-def camDockableWidgetUIScript(restore=False):
+def DockableWidgetUIScript(restore=False):
     ''' 
         When the control is restoring, the workspace control has already been 
         created and all that needs to be done is restoring its UI.
@@ -184,7 +186,7 @@ def camDockableWidgetUIScript(restore=False):
   
     if customMixinWindow is None:
         # Create a custom mixin widget for the first time
-        customMixinWindow = camDockableWidget()     
+        customMixinWindow = DockableWidget()     
         customMixinWindow.setObjectName('customMayaMixinWindow')
         
     if restore == True:
@@ -193,12 +195,12 @@ def camDockableWidgetUIScript(restore=False):
         omui.MQtUtil.addWidgetToMayaLayout(int(mixinPtr), int(restoredControl))
     else:
         # Create a workspace control for the mixin widget by passing all the needed parameters. See workspaceControl command documentation for all available flags.
-        customMixinWindow.show(dockable=True, height=600, width=480, uiScript='camDockableWidgetUIScript(restore=True)')
+        customMixinWindow.show(dockable=True, height=600, width=480, uiScript='DockableWidgetUIScript(restore=True)')
         
     return customMixinWindow
       
 def main():
-    ui = camDockableWidgetUIScript()
+    ui = DockableWidgetUIScript()
     return ui
 
 if __name__ == '__main__':
