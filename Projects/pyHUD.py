@@ -147,30 +147,29 @@ cmds.hudButton('HUDRecord', s=1, b=5, vis=1, l='Record', bw=60, bsh='roundRectan
 cmds.hudButton('HUDStop', s=1, b=5, vis=1, l='Record', bw=60, bsh='roundRectangle',  rc=getEndTime(startT), event= 'timeChanged')
 
 
-# def HUDButtonPressed():
-# 	print('start recording')
-
 # Now create our button. Only execute on mouse release.
 #
 cmds.hudButton('HUDHelloButton', s=1, b=5, vis=1, l='Record', bw=60, bsh='roundRectangle',  rc=HUDButtonReleased )
 
-
-startT = 0
-
 def getStartTime():
     global startT
     startT = cmds.timerX()
-
-	cmds.headsUpDisplay('HUDTime', section=1, b=7, ba='left', blockSize='medium', label='Start Recording: ', labelFontSize='large', command=getEndTime)
     print(startT)
     return startT
 
+
+def updateTime():
+	if cmds.headsUpDisplay('HUDTime', ex=True): # if exists 
+		cmds.headsUpDisplay('HUDTime', r=True) # refreshes time
+	else:
+		cmds.headsUpDisplay('HUDTime', section=1, b=7, ba='left', blockSize='medium', labelFontSize='large', command=getEndTime)
+
 def getEndTime():
+    global prevTime
     endT = cmds.timerX(st=startT)
-    
-    cmds.headsUpDisplay('HUDTime', r=True, vis=True)
     print(endT)
     return endT
+
 
 cmds.hudButton('HUDRecord', s=1, b=5, vis=1, l='Record', bw=60, bsh='roundRectangle', rc=getStartTime)
 cmds.hudButton('HUDStop', s=1, b=6, vis=1, l='Stop', bw=60, bsh='roundRectangle', rc=getEndTime)
