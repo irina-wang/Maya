@@ -12,7 +12,6 @@
 ################################################################################
 
 # TODO 07/07
-#  1. update events 
 #  2. Connect record with buttons
 #  3. Pretty layout 
 #  4. Comments 
@@ -82,7 +81,6 @@ class camDockableWidget(MayaQWidgetDockableMixin, QWidget):
         '''
         cameraShape = self.cameraName[1]
         camfocalLength = cmds.camera(cameraShape, q=True, fl=True)
-        print('called getFocal()')
         return camfocalLength
 
     def getZoom(self):
@@ -92,7 +90,6 @@ class camDockableWidget(MayaQWidgetDockableMixin, QWidget):
         '''
         cameraShape = self.cameraName[1]
         camZoom =  cmds.camera(cameraShape, q=True, e=True, zom=True)
-        print('camZoom changed = ' + str(camZoom))
         return camZoom
 
     def getCamName(self):
