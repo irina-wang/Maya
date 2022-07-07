@@ -1,16 +1,8 @@
-# Author: Irina Mengqi Wang, 07/2022 
-# Project: Camera_HUD (In-Progress)
-# --------
-# Outline: 
-#       1. heads-up display (HUD): basic UI programming in Maya 
-#   --> 2. Autofocus (Reticle)                                      IN-PROGRESS
-#       3. Customizable camera shakes                               IN-PROGRESS
-
-
-# TODO 07/07
-#  1. update events 
-#  2. Connect record with buttons
-#  3. pretty layout 
+# Copyright 2017 Autodesk, Inc. All rights reserved.
+#
+# Use of this software is subject to the terms of the Autodesk license
+# agreement provided at the time of installation or download, or which
+# otherwise accompanies this software in either electronic or hard copy form.
 
 from builtins import int
 from maya.app.general.mayaMixin import MayaQWidgetDockableMixin
@@ -23,168 +15,113 @@ import maya.cmds as cmds
 
 customMixinWindow = None
 
-# Delete workspace already present
+# ''' MayaQWidgetDockableMixin is not a workspace control in itself, it is added 
+#     as a child to a created workspace control. See help(MayaQWidgetDockableMixin) 
+#     for more details. The following class is a simple widget with a layout and a push button.
+# ''' 
+
 if not 'customMixinWindow' in globals():
     customMixinWindow = None
-
-
-
-# placed in a 2D inactive overlay plane on the 3D viewport
-class camDockableWidget(MayaQWidgetDockableMixin, QWidget):
+    
+class DockableWidget(MayaQWidgetDockableMixin, QWidget):
 
     def __init__(self):
         '''
-        Constructor: instantiate the camera object and call UI methods
-
+        Constructor, initiate the camera 
         '''
         super().__init__()
-        self.cameraName = cmds.camera()
+        # cameraName = cmds.camera()
+        # self.getDisplay(cameraName)
         self.initUI()
 
 
     def initUI(self):
         '''
-        Initialize the widget UI
+        Constructor:
 
-        '''        
-        # Tab 1: 
-        # create a checkbox control for HeadUpDisplay 
+        call init UI
+        '''
+
+        layout = QHBoxLayout()
+        # pushBtn = QPushButton('PushMe', self)
+        # pushBtn.clicked.connect(self.buttonPush)
+
         self.checkBox = QCheckBox('HUD', self)
         self.checkBox.stateChanged.connect(self.OnOff)
 
-        # TODO: Tab2 & Tab3
-        label2 = QLabel("Widget in Tab 2 for Camera Control.")
-        label3 = QLabel("Widget in Tab 3 for Camera Shake.")
 
-        # Create tab widgets
-        # append tabs to the tabWidget 
-        tabWidget = QTabWidget()
-        tabWidget.addTab(self.checkBox, "Display")
-        tabWidget.addTab(label2, "Camera Control")
-        tabWidget.addTab(label3, "Camera Shake")
-
-        # Grid layout for tabs
-        layout = QGridLayout()
+        layout.addWidget(self.checkBox)
+        layout.addStretch(1)
         self.setLayout(layout)
-        layout.addWidget(tabWidget, 0, 0)
 
         self.move(300, 300)
-        self.setWindowTitle('Camera Heads Up Display Control')
+        self.setWindowTitle('testLayout')
         self.show()
 
-    def getFocal(self):
-        '''
-        Get the focal length of the selected camera
 
-        '''
-        cameraShape = self.cameraName[1]
-        camfocalLength = cmds.camera(cameraShape, q=True, fl=True)
-        return camfocalLength
+    def getVal(self, cameraName):
+        cameraShape = cameraName[1]
+        focalLength = cmds.camera(cameraShape, q=True, fl=True)
+        zoom =  cmds.camera(cameraShape, q=True, zom=True)
+        return (focalLength, zoom)
 
-    def getZoom(self):
+ 
+    def buttonPush(self):
         '''
-        Get the Zoom length for the selected camera
+        Invoked when pushBtn being called 
+        '''
+        print('button pushed')
 
-        '''
-        cameraShape = self.cameraName[1]
-        camZoom =  cmds.camera(cameraShape, q=True, e=True, zom=True)
-        print('camZoom changed = ' + str(camZoom))
-        return camZoom
-
-    def getCamName(self):
-        '''
-        Get Camera name, change upon selection node change
-        TODO: check if the object is a camera
-        '''
+    def objectPosition(*args):
         try:
             selectedNodes = cmds.selectedNodes()
             mainObj = selectedNodes[-1]
-            return mainObj[1:] # format the name 
-        except:
-            print('Error: No object selected. ')
-            return ''
-	
-    def objectPosition(*args):
-        '''
-        Get the object position of the selected item
-
-        '''
-        try:
-            selectedNodes = cmds.selectedNodes() 
-            mainObj = selectedNodes[-1] # get the select node
-            positionList = cmds.getAttr('%s.translate' % mainObj) 
+            positionList = cmds.getAttr('%s.translate' % mainObj)
             return positionList[0]
-        except:
-            return (0.0,0.0,0.0)
-
+	    except:
+		    return (0.0,0.0,0.0)
 
     def OnOff(self):
-        '''
-        Respond to the toggling of a checkbox, display the HUD when box is 
-        checked and vice versa. 
 
-        TODO: format the HUD
+        '''
+        Invoked when checkBtn being called 
         '''
         if self.checkBox.isChecked():
-            # print("CHECKED!")
-            # event change: # Result: ['dbTraceChanged', 'resourceLimitStateChange', 
-            # 'linearUnitChanged', 'timeUnitChanged', 'angularUnitChanged', 'Undo',
-            #  'undoSupressed', 'Redo', 'customEvaluatorChanged', 'serialExecutorFallback',
-            #  'timeChanged', 'currentContainerChange', 'quitApplication', 'idleHigh', 
-            # 'idle', 'idleVeryLow', 'RecentCommandChanged', 'ToolChanged', 'PostToolChanged', 
-            # 'ToolDirtyChanged', 'ToolSettingsChanged', 'DisplayRGBColorChanged',
-            #  'animLayerRebuild', 'animLayerRefresh', 'animLayerAnimationChanged', 
-            # 'animLayerLockChanged', 'animLayerBaseLockChanged', 'animLayerGhostChanged', 
-            # 'cteEventKeyingTargetForClipChanged', 'cteEventKeyingTargetForLayerChanged', 
-            # 'cteEventKeyingTargetForInvalidChanged', 'teClipAdded', 'teClipModified', 'teClipRemoved', 
-            # 'teCompositionAdded', 'teCompositionRemoved', 'teCompositionActiveChanged', 
-            # 'teCompositionNameChanged', 'teMuteChanged', 'cameraChange', 
-            # 'cameraDisplayAttributesChange', 'GhostListChanged', 'SelectionChanged', 
-            # 'UFESelectionChanged', 'PreSelectionChangedTriggered', 
-            # 'LiveListChanged', 'ActiveViewChanged', 'SelectModeChanged', 
-            # 'SelectTypeChanged', 'SelectPreferenceChanged', 'DisplayPreferenceChanged', 
-            # 'DagObjectCreated', 'transformLockChange', 'renderLayerManagerChange', 
-            # 'renderLayerChange', 'displayLayerManagerChange', 'displayLayerAdded', 
-            # 'displayLayerDeleted', 'displayLayerVisibilityChanged', 'displayLayerChange', 
-            # 'renderPassChange', 'renderPassSetChange', 'renderPassSetMembershipChange', 
-            # 'passContributionMapChange', 'DisplayColorChanged', 'lightLinkingChanged', 
-            # 'lightLinkingChangedNonSG', 'UvTileProxyDirtyChangeTrigger', 
-            # 'preferredRendererChanged', 'polyTopoSymmetryValidChanged', 
-            # 'SceneSegmentChanged', 'PostSceneSegmentChanged', 'SequencerActiveShotChanged', 
-            # 'SoundNodeAdded', 'SoundNodeRemoved', 'ColorIndexChanged', 'deleteAll', 
-            # 'NameChanged', 'symmetricModellingOptionsChanged', 'softSelectOptionsChanged', 'SetModified', 'xformConstraintOptionsChanged', 'undoXformCmd', 'redoXformCmd', 'linearToleranceChanged', 'angularToleranceChanged', 'nurbsToPolygonsPrefsChanged', 'nurbsCurveRebuildPrefsChanged', 'constructionHistoryChanged', 'threadCountChanged', 'SceneSaved', 'NewSceneOpened', 'SceneOpened', 'SceneImported', 'PreFileNewOrOpened', 'PreFileNew', 'PreFileOpened', 'PostSceneRead', 'renderSetupAutoSave', 'workspaceChanged', 'metadataVisualStatusChanged', 'freezeOptionsChanged', 'nurbsToSubdivPrefsChanged', 'selectionConstraintsChanged', 'PolyUVSetChanged', 'PolyUVSetDeleted', 'startColorPerVertexTool', 'stopColorPerVertexTool', 'start3dPaintTool', 'stop3dPaintTool', 'DragRelease', 'ModelPanelSetFocus', 'modelEditorChanged', 'gridDisplayChanged', 'interactionStyleChanged', 'axisAtOriginChanged', 'CurveRGBColorChanged', 'SelectPriorityChanged', 'snapModeChanged', 'MenuModeChanged', 'profilerSelectionChanged', 'texWindowEditorImageBaseColorChanged', 'texWindowEditorCheckerDensityChanged', 'texWindowEditorCheckerDisplayChanged', 'texWindowEditorDisplaySolidMapChanged', 'texWindowEditorShowup', 'texWindowEditorClose', 'activeHandleChanged', 'ChannelBoxLabelSelected', 'colorMgtOCIORulesEnabledChanged', 'colorMgtUserPrefsChanged', 'RenderSetupSelectionChanged', 'colorMgtEnabledChanged', 'colorMgtConfigFileEnableChanged', 'colorMgtConfigFilePathChanged', 'colorMgtConfigChanged', 'colorMgtWorkingSpaceChanged', 'colorMgtPrefsViewTransformChanged', 'colorMgtPrefsReloaded', 'colorMgtOutputChanged', 'colorMgtPlayblastOutputChanged', 'colorMgtRefreshed', 'selectionPipelineChanged', 'graphEditorChanged', 'graphEditorParamCurveSelected', 'graphEditorOutlinerHighlightChanged', 'graphEditorOutlinerListChanged', 'currentSoundNodeChanged', 'glFrameTrigger', 'activeTexHandleChanged', 'EditModeChanged', 'playbackRangeAboutToChange', 'playbackSpeedChanged', 'playbackModeChanged', 'playbackRangeSliderChanged', 'playbackByChanged', 'playbackRangeChanged', 'RenderViewCameraChanged', 'texScaleContextOptionsChanged', 'texRotateContextOptionsChanged', 'texMoveContextOptionsChanged', 'polyCutUVSteadyStrokeChanged', 'polyCutUVEventTexEditorCheckerDisplayChanged', 'polyCutUVShowTextureBordersChanged', 'polyCutUVShowUVShellColoringChanged', 'shapeEditorTreeviewSelectionChanged', 'poseEditorTreeviewSelectionChanged', 'sculptMeshCacheBlendShapeListChanged', 'sculptMeshCacheCloneSourceChanged', 'RebuildUIValues', 'cacheDestroyed', 'cachingPreferencesChanged', 'cachingSafeModeChanged', 'cachingEvaluationModeChanged', 'teTrackAdded', 'teTrackRemoved', 'teTrackNameChanged', 'teTrackModified', 'cteEventClipEditModeChanged', 'teEditorPrefsChanged']
-            cmds.headsUpDisplay( 'HUDObjectPosition', section=1, block=1, blockSize='medium', label='Position', labelFontSize='large', command=self.objectPosition, event='SelectionChanged', nodeChanges='attributeChange' )
-            cmds.headsUpDisplay( 'HUDFocal', section=2, block=0, blockSize='medium', label='Focal', labelFontSize='large', command=self.getFocal, event='cameraDisplayAttributesChange')
-            cmds.headsUpDisplay( 'HUDZoom', section=3, block=0, blockSize='medium', label='Zoom', labelFontSize='large', command=self.getZoom, event='cameraDisplayAttributesChange')
-            cmds.headsUpDisplay( 'HUDName', section=1, b=0, ba='left' , blockSize='medium', label='Cam', labelFontSize='large', command=self.getCamName, event='SelectionChanged', nodeChanges='attributeChange' )
-
-            # record time
-
-
-            # video format 
-            # filter??
-
+            print("CHECKED!")
+            cmds.headsUpDisplay( 'HUDObjectPosition', section=1, block=0, blockSize='medium', label='Position', labelFontSize='large', command=self.getVal, event='SelectionChanged', nodeChanges='attributeChange' )
+            cmds.headsUpDisplay( 'HUDObjectPosition', section=1, block=0, blockSize='medium', label='Position', labelFontSize='large', command=self.getVal, event='SelectionChanged', nodeChanges='attributeChange' )
         else:
-            # print("UNCHECKED!")
-            cmds.headsUpDisplay( 'HUDObjectPosition', rem=True )
-            cmds.headsUpDisplay( 'HUDFocal', rem=True )
-            cmds.headsUpDisplay( 'HUDZoom', rem=True )
-            cmds.headsUpDisplay( 'HUDName', rem=True )
+
+            cmds.headsUpDisplay( 'HUDObjectPosition', section=1, block=0, blockSize='medium', label='Position', labelFontSize='large', command=objectPosition, event='SelectionChanged', nodeChanges='attributeChange' )
+            print("UNCHECKED!")
 
 
-def camDockableWidgetUIScript(restore=False):
-    ''' 
-        When the control is restoring, the workspace control has already been 
-        created and all that needs to be done is restoring its UI.
-    '''
+
+# ''' A workspace control is created by calling show() on the DockableWidget class. 
+#     This control is only created once if the retain property is set to true, which 
+#     is the default. The uiScript argument passed to the show() method will be 
+#     invoked every time this control is opened/restored. It is recommended to add 
+#     the proper import statement in the uiScript argument.
+    
+#     For example, in renderSetup.py file the UIScript for renderSetupWindow is
+#       "uiScript='import maya.app.renderSetup.views.renderSetup as renderSetup\nrenderSetup.createUI(restore=True)'"
+        
+#     The following method needs to be invoked in order to create the workspace control for the example above.
+#     If the control is being restored, then Maya will call the method by passing restore=True
+# '''    
+def DockableWidgetUIScript(restore=False):
     global customMixinWindow
+  
+#   ''' When the control is restoring, the workspace control has already been created and
+#       all that needs to be done is restoring its UI.
+#   '''
     if restore == True:
         # Grab the created workspace control with the following.
         restoredControl = omui.MQtUtil.getCurrentParent()
   
     if customMixinWindow is None:
         # Create a custom mixin widget for the first time
-        customMixinWindow = camDockableWidget()     
+        customMixinWindow = DockableWidget()     
         customMixinWindow.setObjectName('customMayaMixinWindow')
         
     if restore == True:
@@ -193,13 +130,23 @@ def camDockableWidgetUIScript(restore=False):
         omui.MQtUtil.addWidgetToMayaLayout(int(mixinPtr), int(restoredControl))
     else:
         # Create a workspace control for the mixin widget by passing all the needed parameters. See workspaceControl command documentation for all available flags.
-        customMixinWindow.show(dockable=True, height=600, width=480, uiScript='camDockableWidgetUIScript(restore=True)')
+        customMixinWindow.show(dockable=True, height=600, width=480, uiScript='DockableWidgetUIScript(restore=True)')
         
     return customMixinWindow
-      
+	  
+''' Using the workspaceControl Maya command to query/edit flags about the created 
+    workspace control can be achieved this way:
+        maya.cmds.workspaceControl('customMayaMixinWindowWorkspaceControl', q=True, visible=True)
+        maya.cmds.workspaceControl('customMayaMixinWindowWorkspaceControl', e=True, visible=False)
+        
+    Note that Maya automatically appends the "WorkspaceControl" string to the 
+    workspace control child object name. In this example it is the child widget name (customMayaMixinWindow)
+'''
+
 def main():
-    ui = camDockableWidgetUIScript()
+    ui = DockableWidgetUIScript()
     return ui
+
 
 if __name__ == '__main__':
     main()
