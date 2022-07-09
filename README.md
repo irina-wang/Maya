@@ -14,7 +14,7 @@ This is the repository that I used to document my learning jounrney for Maya sta
 └── README.md
 ```
 
-#### Current Progress
+#### 🌟 Current Progress
 
 - Making a [**camera plugin**](https://github.com/irina-wang/Maya/blob/main/Projects/pyCamera.py)
 (./Projects/pyCamera.py)
