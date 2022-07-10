@@ -19,6 +19,22 @@ from PySide2.QtWidgets import *
 import maya.cmds as cmds
 
 
+# TODO for autofocus: 
+"""
+    Enable depth of field 
+    Select the closest object —> zoom focus 
+    Distance measure
+    Snap to points 
+    Locator - Attach the locator to the point(as the parent) 
+
+    Connection editor: Distance dimention shape - select - reload left
+    Distance —> focus distance/AIfocusdiance 
+
+    Reload left 
+
+    connectAttr -f distanceDimension1.distance cameraShape1.focusDistance;
+"""
+
 customMixinWindow = None
 
 # Delete workspace already present
