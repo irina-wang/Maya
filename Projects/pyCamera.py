@@ -7,6 +7,7 @@
 #       1. heads-up display (HUD): basic UI programming in Maya
 #   --> 2. Autofocus (Reticle)                                      IN-PROGRESS
 #       3. Customizable camera shakes                               IN-PROGRESS
+#       4. Lens overlay???
 #
 ################################################################################
 
