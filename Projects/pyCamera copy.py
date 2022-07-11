@@ -20,7 +20,7 @@ from PySide2.QtWidgets import *
 import maya.cmds as cmds
 
 
-distanceToPoint
+
 
 # TODO for autofocus: 
 """
@@ -36,6 +36,8 @@ distanceToPoint
     Reload left 
 
     connectAttr -f distanceDimension1.distance cameraShape1.focusDistance;
+
+    find: distanceToPoint
 """
 
 customMixinWindow = None
