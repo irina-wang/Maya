@@ -20,6 +20,11 @@ from PySide2.QtWidgets import *
 import maya.cmds as cmds
 
 
+""" import apis """
+import maya.api.OpenMaya as om
+import maya.api.OpenMayaAnim as omanim
+import maya.api.OpenMayaRender as omrender
+
 
 
 # TODO for autofocus: 
@@ -60,6 +65,12 @@ class camDockableWidget(MayaQWidgetDockableMixin, QWidget):
         super().__init__()
         self.cameraName = cmds.camera()
         self.initUI()
+        self.cameraName.isDepthOfField
+
+OpenMaya.MFnCamera.
+
+
+nearFocusDistance = property(...)
 
     def initUI(self):
         """
