@@ -26,6 +26,9 @@ import maya.api.OpenMayaAnim as omanim
 import maya.api.OpenMayaRender as omrender
 
 
+camObj = om.MFnCamera()
+camObj.computeDepthOfField()	
+
 
 # TODO for autofocus: 
 """
