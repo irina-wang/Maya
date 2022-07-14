@@ -33,9 +33,8 @@ camObj.computeDepthOfField()
 # TODO for autofocus: 
 """
     - Enable depth of field
-    --> Select the closest object —> zoom focus 
-    Distance measure
-    Snap to points 
+    - Select the closest object —> zoom focus 
+    - Distance measure
     Locator - Attach the locator to the point(as the parent) 
 
     Connection editor: Distance dimention shape - select - reload left

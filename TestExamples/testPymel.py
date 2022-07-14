@@ -1,14 +1,5 @@
 import pymel.core as pm
-
 from pymel.core import *
-
-
-help(pm.nt)
-
-import maya.cmds as cmds
-
-
-import pymel.core.nt.Transform 
 
 
 def findCenterCoordinate(self,transform, index):
@@ -19,11 +10,17 @@ def findCenterCoordinate(self,transform, index):
     
 p = polySphere( name='theMoon', sa=7, sh=7 )[0]
 
-print(pm.nt.getPosition(p))
+print(pm.nt.getPoints(p))
+print(p.vtx[9])
+
+
+pm.Mesh.getClosestPoint(p.vtx[9], space='preTransform', accelParams=None)
+
+
+p.getClosestPoint(dt.Point(0.0,0.0,0.0))
 
 
 
-
-findCenterCoordinate(pCube1[0],1)
-
+# print the position of the vertex
+print(p.vtx[9].getPosition())
 
