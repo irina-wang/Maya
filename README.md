@@ -1,5 +1,7 @@
-This is the repository that I used to document my learning jounrney for Maya starting 2022 summer. 
 [Project Showcase](https://drive.google.com/file/d/1UBhOmNQ0Jkb3esqPSZJoHCt5W73F9P9L/view?usp=sharing)
+
+This is the repository that I used to document my learning jounrney for Maya starting 2022 summer. 
+
 
 ### Project log
 - [3-point Lighting Rig](https://drive.google.com/file/d/1mYEwcLzT0aO40iRdm9kDy0qJfGt8HGoF/view?usp=sharing) 
