@@ -1,4 +1,4 @@
-This is the repository that I used to document my learning jounrney for Maya starting 2022 summer. I'm currently working on a camera plugin. 
+This is the repository that I used to document my learning jounrney for Maya starting 2022 summer. 
 
 ### Project log
 - [3-point Lighting Rig](https://drive.google.com/file/d/1mYEwcLzT0aO40iRdm9kDy0qJfGt8HGoF/view?usp=sharing) 
