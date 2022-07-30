@@ -1,8 +1,4 @@
-### About
-
-  I got really interested about Autodesk Maya after engaging in the [Women In Animation](https://womeninanimation.org/) discussion circle. As part of [ASWF summer learning program](https://www.aswf.io/blog/introducing-aswf-diversity-and-inclusion-summer-learning-program/), I completed [Intro to Python 3 for Maya](https://www.udemy.com/course/intro-to-python-3-for-maya-2022/), and I'm currently half way through [Maya for Absolute Beginners](https://www.udemy.com/course/intro-to-python-3-for-maya-2022/). 
-
-  This is the repository that I used to document my learning jounrney for Maya starting 2022 summer. I'm learning currently working on a camera plugin. 
+This is the repository that I used to document my learning jounrney for Maya starting 2022 summer. I'm currently working on a camera plugin. 
 
 ### Project log
 - [3-point Lighting Rig](https://drive.google.com/file/d/1mYEwcLzT0aO40iRdm9kDy0qJfGt8HGoF/view?usp=sharing) 
@@ -21,6 +17,10 @@
 
 
 ### Summer Learning
+
+  I got really interested about Autodesk Maya after engaging in the [Women In Animation](https://womeninanimation.org/) Coding in Animation circle and as part of [ASWF summer learning program](https://www.aswf.io/blog/introducing-aswf-diversity-and-inclusion-summer-learning-program/).
+  
+Here is the list of courses that I've completed: 
 - [Intro to Maya](https://www.udemy.com/course/intro-to-python-3-for-maya-2022/)
 - [Python Scripting](https://www.udemy.com/course/intro-to-python-3-for-maya-2022/learn/lecture/27559210?start=150#overview)
 - [Lighting Principles](https://www.fxphd.com/details/608/)
