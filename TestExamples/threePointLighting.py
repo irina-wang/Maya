@@ -1,21 +1,31 @@
 import maya.cmds as cmds
 
+
+
+# control={ offsetAmount = 10, 
+#         lightRotation = 30, 
+#         vis = 'True',
+#         i = 1.0,
+#         r = 0.8,
+#         g = 0.8,
+#         b = 0.8
+# }
 def createLightRig(mainObj):
 
-    # get object position
-    objPositionList = cmds.getAttr('%s.translate' % mainObj)[0]
-    scalePivotList = cmds.getAttr('%s.scalePivot' % mainObj)[0]
-    rotatePivotList = cmds.getAttr('%s.rotatePivot' % mainObj)[0]
-    # pvtX, pvtY, pvtZ = scalePivotList
-
-    # get world pivots
-    pivots = cmds.xform(mainObj, ws=True, q=True, piv=True)[:-3]  # Get its pivot values.
-    pvtX, pvtY, pvtZ = pivots
+    # get object position & object space pivot 
+    # objPositionList = cmds.getAttr('%s.translate' % mainObj)[0] # maybe to set plans 
+    # scalePivotList = cmds.getAttr('%s.scalePivot' % mainObj)[0] #
+    # rotatePivotList = cmds.getAttr('%s.rotatePivot' % mainObj)[0] #
 
     offsetAmount = 10
     lightRotation = 30
 
-    # create key light
+    # set object pivots position in world space as the center 
+    wsPivots = cmds.xform(mainObj, ws=True, q=True, piv=True)[:-3]  # Get scale pivots
+    pvtX, pvtY, pvtZ = wsPivots
+
+    
+    # create key light 
     newLight = cmds.spotLight(rgb=(1, 1, 1), name=mainObj + "KeyLight")
     lightTransform = cmds.listRelatives(newLight, parent=True)
     keyLight = lightTransform[0]
@@ -30,6 +40,14 @@ def createLightRig(mainObj):
     lightTransform = cmds.listRelatives(newLight, parent=True)
     rimLight = lightTransform[0]
 
+# XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+    # TEST - create area light
+    # newLight = cmds.shadingNode('areaLight', asLight=True, name=mainObj +"areaLight")
+    # lightTransform = cmds.listRelatives(newLight, parent=True)
+    # areaLight = lightTransform[0] 
+# XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+    
+    # move light to default position 
     cmds.move(pvtX, pvtY, pvtZ + offsetAmount, keyLight)
     cmds.move(pvtX, pvtY, pvtZ, keyLight + ".rotatePivot")
     cmds.rotate(-lightRotation, lightRotation, 0, keyLight)
@@ -42,35 +60,64 @@ def createLightRig(mainObj):
     cmds.move(pvtX, pvtY, pvtZ, rimLight + ".rotatePivot")
     cmds.rotate(180 + lightRotation, 0, 0, rimLight)
 
+# XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+    # cmds.move(pvtX, pvtY, pvtZ + offsetAmount, areaLight)
+    # cmds.move(pvtX, pvtY, pvtZ, areaLight + ".rotatePivot")
+    # cmds.rotate(-lightRotation, -lightRotation, 0, areaLight)
+# XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
     lightNode = cmds.group(empty=True, name= mainObj + "LightRig")
 
     cmds.parent(keyLight, lightNode)
     cmds.parent(fillLight, lightNode)
     cmds.parent(rimLight, lightNode)
+    # cmds.parent(areaLight, lightNode)
 
     cmds.select(lightNode, replace=True)
 
-    return keyLight
+
+def centerPivot(obj):
+    cmds.xform(obj, cpc=True)
 
 
-def centerPivot(mainObj):
-    cmds.xform(mainObj, cpc=True)
+def LightUpdate(LightType, obj, vis, i, r,g,b):
+    '''
+    Update intensity, rgb, value while the update button is clicked
 
-# lightShape - name of the light
-# intensity - float
-def setColor(lightShape, intensity):
-    cmds.setAttr(lightShape + ".intensity", intensity)
+    Examples: 
+        LightUpdate(obj +'KeyLight', , 1.0, vis, r,g,b) 
+        LightUpdate(obj + 'FillLight', obj, 1.0, vis, r,g,b) 
+        LightUpdate(obj + 'RimLight', obj, 1.0, vis, r,g,b) 
+
+    other flags:
+        https://help.autodesk.com/cloudhelp/2017/ENU/Maya-Tech-Docs/CommandsPython/pointLight.html#hExamples
+    '''
+    objName = obj + LightType
+
+    # Highlight the object
+    cmds.select(clear=True)
+    cmds.select(objName)
+
+    # Update intensity
+    cmds.setAttr(objName + ".intensity", i)
+    # print('Debug Info: Object Intensity is set to ' + str(cmds.getAttr(objName + ".intensity")))
+
+    # Update visibility 
+    cmds.setAttr(objName + '.visibility', vis)
+    # flip visibility 
+    # cmds.setAttr(objName + '.visibility', not cmds.getAttr(objName +'.visibility'))
+    
+    # Update rgb (assume it's spotlight)
+    cmds.spotLight(objName, e=True, rgb=(r, g, b))
+    # cmds.spotLight('pCube1KeyLight', q=True, rgb=True)
 
 
+'''
+    How to use
+'''
 selectedNodes = cmds.selectedNodes()
-selectedObj = selectedNodes[-1]
-lightNode = createLightRig(selectedObj)
-print(lightNode)
-
-# cmds.setAttr(keyLight + ".intensity", 0.5)
-# cmds.setAttr(keyLightShape + ".intensity", 0.5)
-
-
-
-
-
+try: 
+   selectedObj = selectedNodes[-1]
+   createLightRig(selectedObj)
+except: 
+   print('No object is selected')
