@@ -27,4 +27,4 @@ Here is the list of courses that I've completed:
 - [Intro to Maya](https://www.udemy.com/course/intro-to-python-3-for-maya-2022/)
 - [Python Scripting](https://www.udemy.com/course/intro-to-python-3-for-maya-2022/learn/lecture/27559210?start=150#overview)
 - [Lighting Principles](https://www.fxphd.com/details/608/)
-- [Advanced Lighting](https://www.fxphd.com/details/?idCourse=623) course from FXPhd.
+- [Advanced Lighting](https://www.fxphd.com/details/?idCourse=623)
